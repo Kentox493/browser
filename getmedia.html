@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GetUserMedia Demo</title>
+  <title>Demo</title>
 </head>
 <body>
-  <h2>Demo</h2>
+  <h2>Demo GetUserMedia</h2>
   <button id="startBtn">Start Camera + Mic</button>
   <br><br>
   <video id="video" width="400" height="300" autoplay playsinline></video>
@@ -16,15 +16,18 @@
     const videoElement = document.getElementById('video');
 
     button.addEventListener('click', () => {
-      navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-        .then(stream => {
-          // tampilkan stream ke elemen video
-          videoElement.srcObject = stream;
-        })
-        .catch(error => {
-          console.error('Error accessing media devices.', error);
-          alert('Tidak bisa mengakses kamera/mikrofon: ' + error.message);
-        });
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+          .then(stream => {
+            videoElement.srcObject = stream;
+          })
+          .catch(error => {
+            console.error('Error accessing media devices.', error);
+            alert('Tidak bisa mengakses kamera/mikrofon: ' + error.message);
+          });
+      } else {
+        alert("Browser tidak mendukung navigator.mediaDevices.getUserMedia.\nHarap gunakan HTTPS dan browser modern.");
+      }
     });
   </script>
 </body>
