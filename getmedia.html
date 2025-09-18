@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GetUserMedia Demo</title>
+</head>
+<body>
+  <h2>Demo</h2>
+  <button id="startBtn">Start Camera + Mic</button>
+  <br><br>
+  <video id="video" width="400" height="300" autoplay playsinline></video>
+
+  <script>
+    const button = document.getElementById('startBtn');
+    const videoElement = document.getElementById('video');
+
+    button.addEventListener('click', () => {
+      navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then(stream => {
+          // tampilkan stream ke elemen video
+          videoElement.srcObject = stream;
+        })
+        .catch(error => {
+          console.error('Error accessing media devices.', error);
+          alert('Tidak bisa mengakses kamera/mikrofon: ' + error.message);
+        });
+    });
+  </script>
+</body>
+</html>
