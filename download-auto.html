@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download APK</title>
+</head>
+<body>
+    <button onclick="downloadAPK()">Download APK</button>
+    <p id="status">Klik tombol untuk download</p>
+
+    <script>
+        function downloadAPK() {
+            // Ganti status
+            document.getElementById('status').textContent = "Mempersiapkan download...";
+            
+            // Simulasi proses download
+            setTimeout(function() {
+                // Membuat konten file APK (simulasi)
+                const content = "Ini adalah file APK simulasi. File APK asli akan berisi kode aplikasi Android.";
+                
+                // Membuat Blob (file biner)
+                const blob = new Blob([content], { type: 'application/vnd.android.package-archive' });
+                
+                // Membuat URL untuk blob
+                const url = URL.createObjectURL(blob);
+                
+                // Membuat elemen <a> untuk download
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'aplikasi_simulasi.apk';
+                
+                // Menambahkan ke DOM dan mengkliknya
+                document.body.appendChild(a);
+                a.click();
+                
+                // Membersihkan
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Update status
+                document.getElementById('status').textContent = "Download selesai! File APK tersimpan.";
+            }, 1500); // Delay 1.5 detik untuk simulasi
+        }
+    </script>
+</body>
+</html>
