@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Fitur Web API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .status {
+            font-size: 0.85rem;
+            padding: 8px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+        
+        .status.success {
+            background: rgba(46, 204, 113, 0.3);
+            color: #fff;
+        }
+        
+        .status.error {
+            background: rgba(231, 76, 60, 0.3);
+            color: #fff;
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Demo Fitur Web API</h1>
+            <p class="description">
+                Halaman ini mendemonstrasikan berbagai fitur Web API yang tersedia di browser modern.
+                Klik pada setiap kartu untuk mencoba fitur yang sesuai.
+            </p>
+        </header>
+        
+        <div class="features-grid">
+            <!-- Notifications -->
+            <div class="feature-card" onclick="requestNotificationPermission()">
+                <h3 class="feature-title">Notifications</h3>
+                <p class="feature-description">Meminta izin untuk menampilkan notifikasi</p>
+                <div class="status" id="notification-status">Status: Belum diizinkan</div>
+            </div>
+            
+            <!-- Location -->
+            <div class="feature-card" onclick="getLocation()">
+                <h3 class="feature-title">Location</h3>
+                <p class="feature-description">Mendapatkan lokasi geografis pengguna</p>
+                <div class="status" id="location-status">Status: Belum diambil</div>
+            </div>
+            
+            <!-- Camera -->
+            <div class="feature-card" onclick="accessCamera()">
+                <h3 class="feature-title">Camera</h3>
+                <p class="feature-description">Mengakses kamera perangkat</p>
+                <div class="status" id="camera-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Microphone -->
+            <div class="feature-card" onclick="accessMicrophone()">
+                <h3 class="feature-title">Microphone</h3>
+                <p class="feature-description">Mengakses mikrofon perangkat</p>
+                <div class="status" id="microphone-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Camera + Microphone -->
+            <div class="feature-card" onclick="accessCameraMicrophone()">
+                <h3 class="feature-title">Camera + Microphone</h3>
+                <p class="feature-description">Mengakses kamera dan mikrofon secara bersamaan</p>
+                <div class="status" id="camera-microphone-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Screen Share -->
+            <div class="feature-card" onclick="shareScreen()">
+                <h3 class="feature-title">Screen Share</h3>
+                <p class="feature-description">Berbagi layar atau jendela aplikasi</p>
+                <div class="status" id="screenshare-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Bluetooth -->
+            <div class="feature-card" onclick="accessBluetooth()">
+                <h3 class="feature-title">Bluetooth</h3>
+                <p class="feature-description">Menghubungkan ke perangkat Bluetooth</p>
+                <div class="status" id="bluetooth-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- USB -->
+            <div class="feature-card" onclick="accessUSB()">
+                <h3 class="feature-title">USB</h3>
+                <p class="feature-description">Mengakses perangkat USB</p>
+                <div class="status" id="usb-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Serial -->
+            <div class="feature-card" onclick="accessSerial()">
+                <h3 class="feature-title">Serial</h3>
+                <p class="feature-description">Mengakses port serial</p>
+                <div class="status" id="serial-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- HID -->
+            <div class="feature-card" onclick="accessHID()">
+                <h3 class="feature-title">HID</h3>
+                <p class="feature-description">Mengakses perangkat HID (Human Interface Device)</p>
+                <div class="status" id="hid-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Fullscreen -->
+            <div class="feature-card" onclick="toggleFullscreen()">
+                <h3 class="feature-title">Fullscreen</h3>
+                <p class="feature-description">Meminta mode layar penuh</p>
+                <div class="status" id="fullscreen-status">Status: Normal</div>
+            </div>
+            
+            <!-- Pointer Lock -->
+            <div class="feature-card" onclick="togglePointerLock()">
+                <h3 class="feature-title">Pointer Lock</h3>
+                <p class="feature-description">Mengunci pointer mouse</p>
+                <div class="status" id="pointerlock-status">Status: Tidak terkunci</div>
+            </div>
+            
+            <!-- Async Clipboard API -->
+            <div class="feature-card" onclick="copyToClipboard()">
+                <h3 class="feature-title">Async Clipboard API</h3>
+                <p class="feature-description">Mengakses clipboard secara asynchronous</p>
+                <div class="status" id="clipboard-status">Status: Klik untuk menyalin teks</div>
+            </div>
+            
+            <!-- Device Orientation -->
+            <div class="feature-card" onclick="checkDeviceOrientation()">
+                <h3 class="feature-title">Device Orientation</h3>
+                <p class="feature-description">Mendeteksi orientasi perangkat</p>
+                <div class="status" id="orientation-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Device Motion -->
+            <div class="feature-card" onclick="checkDeviceMotion()">
+                <h3 class="feature-title">Device Motion</h3>
+                <p class="feature-description">Mendeteksi gerakan perangkat</p>
+                <div class="status" id="motion-status">Status: Belum diakses</div>
+            </div>
+            
+            <!-- Virtual Reality (VR) -->
+            <div class="feature-card" onclick="checkVR()">
+                <h3 class="feature-title">Virtual Reality (VR)</h3>
+                <p class="feature-description">Memeriksa dukungan VR</p>
+                <div class="status" id="vr-status">Status: Belum diperiksa</div>
+            </div>
+            
+            <!-- Augmented Reality (AR) -->
+            <div class="feature-card" onclick="checkAR()">
+                <h3 class="feature-title">Augmented Reality (AR)</h3>
+                <p class="feature-description">Memeriksa dukungan AR</p>
+                <div class="status" id="ar-status">Status: Belum diperiksa</div>
+            </div>
+            
+            <!-- NFC -->
+            <div class="feature-card" onclick="checkNFC()">
+                <h3 class="feature-title">NFC</h3>
+                <p class="feature-description">Memeriksa dukungan NFC</p>
+                <div class="status" id="nfc-status">Status: Belum diperiksa</div>
+            </div>
+            
+            <!-- WebAuthn -->
+            <div class="feature-card" onclick="checkWebAuthn()">
+                <h3 class="feature-title">WebAuthn</h3>
+                <p class="feature-description">Memeriksa dukungan Web Authentication</p>
+                <div class="status" id="webauthn-status">Status: Belum diperiksa</div>
+            </div>
+            
+            <!-- Popup -->
+            <div class="feature-card" onclick="showPopup()">
+                <h3 class="feature-title">Popup</h3>
+                <p class="feature-description">Menampilkan popup window</p>
+                <div class="status" id="popup-status">Status: Klik untuk membuka popup</div>
+            </div>
+            
+            <!-- Popup (delayed 5 seconds) -->
+            <div class="feature-card" onclick="showDelayedPopup()">
+                <h3 class="feature-title">Popup (delayed 5 seconds)</h3>
+                <p class="feature-description">Menampilkan popup setelah 5 detik</p>
+                <div class="status" id="delayed-popup-status">Status: Klik untuk menjadwalkan</div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>Petunjuk Penggunaan</h2>
+            <p>Klik pada setiap kartu fitur untuk mengaktifkannya. Beberapa fitur memerlukan izin dari pengguna.</p>
+            <p>Halaman ini hanya demonstrasi, beberapa fitur mungkin tidak bekerja di semua browser.</p>
+        </div>
+        
+        <footer>
+            <p>© 2023 Demo Fitur Web API | Hak Cipta Dilindungi</p>
+        </footer>
+    </div>
+
+    <script>
+        // Notifications
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                updateStatus('notification-status', 'Browser tidak mendukung notifikasi', 'error');
+                return;
+            }
+            
+            Notification.requestPermission().then(permission => {
+                updateStatus('notification-status', `Izin: ${permission}`, permission === 'granted' ? 'success' : 'error');
+                
+                if (permission === "granted") {
+                    new Notification("Demo Notifikasi", {
+                        body: "Ini adalah contoh notifikasi!",
+                        icon: "https://example.com/icon.png"
+                    });
+                }
+            });
+        }
+        
+        // Location
+        function getLocation() {
+            if (!navigator.geolocation) {
+                updateStatus('location-status', 'Geolocation tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('location-status', 'Mendapatkan lokasi...', '');
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    updateStatus('location-status', `Lokasi berhasil didapatkan`, 'success');
+                },
+                error => {
+                    updateStatus('location-status', `Gagal: ${error.message}`, 'error');
+                }
+            );
+        }
+        
+        // Camera
+        function accessCamera() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                updateStatus('camera-status', 'Akses kamera tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('camera-status', 'Meminta akses kamera...', '');
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    updateStatus('camera-status', 'Kamera diizinkan', 'success');
+                    // Menutup stream setelah demo
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(error => {
+                    updateStatus('camera-status', `Gagal: ${error.message}`, 'error');
+                });
+        }
+        
+        // Microphone
+        function accessMicrophone() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                updateStatus('microphone-status', 'Akses mikrofon tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('microphone-status', 'Meminta akses mikrofon...', '');
+            
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    updateStatus('microphone-status', 'Mikrofon diizinkan', 'success');
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(error => {
+                    updateStatus('microphone-status', `Gagal: ${error.message}`, 'error');
+                });
+        }
+        
+        // Camera + Microphone
+        function accessCameraMicrophone() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                updateStatus('camera-microphone-status', 'Akses kamera/mikrofon tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('camera-microphone-status', 'Meminta akses kamera dan mikrofon...', '');
+            
+            navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+                .then(stream => {
+                    updateStatus('camera-microphone-status', 'Kamera dan mikrofon diizinkan', 'success');
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(error => {
+                    updateStatus('camera-microphone-status', `Gagal: ${error.message}`, 'error');
+                });
+        }
+        
+        // Screen Share
+        function shareScreen() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                updateStatus('screenshare-status', 'Berbagi layar tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('screenshare-status', 'Meminta berbagi layar...', '');
+            
+            navigator.mediaDevices.getDisplayMedia({ video: true })
+                .then(stream => {
+                    updateStatus('screenshare-status', 'Berbagi layar diizinkan', 'success');
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(error => {
+                    updateStatus('screenshare-status', `Gagal: ${error.message}`, 'error');
+                });
+        }
+        
+        // Bluetooth
+        function accessBluetooth() {
+            if (!navigator.bluetooth) {
+                updateStatus('bluetooth-status', 'Web Bluetooth tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('bluetooth-status', 'Meminta akses Bluetooth...', '');
+            
+            navigator.bluetooth.requestDevice({
+                acceptAllDevices: true
+            })
+            .then(device => {
+                updateStatus('bluetooth-status', `Terhubung ke: ${device.name}`, 'success');
+            })
+            .catch(error => {
+                updateStatus('bluetooth-status', `Gagal: ${error.message}`, 'error');
+            });
+        }
+        
+        // USB
+        function accessUSB() {
+            if (!navigator.usb) {
+                updateStatus('usb-status', 'WebUSB tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('usb-status', 'Meminta akses USB...', '');
+            
+            navigator.usb.requestDevice({ filters: [] })
+            .then(device => {
+                updateStatus('usb-status', `Terhubung ke: ${device.productName}`, 'success');
+            })
+            .catch(error => {
+                updateStatus('usb-status', `Gagal: ${error.message}`, 'error');
+            });
+        }
+        
+        // Serial
+        function accessSerial() {
+            if (!navigator.serial) {
+                updateStatus('serial-status', 'Web Serial API tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('serial-status', 'Meminta akses Serial...', '');
+            
+            navigator.serial.requestPort()
+            .then(port => {
+                updateStatus('serial-status', 'Port serial terpilih', 'success');
+            })
+            .catch(error => {
+                updateStatus('serial-status', `Gagal: ${error.message}`, 'error');
+            });
+        }
+        
+        // HID
+        function accessHID() {
+            if (!navigator.hid) {
+                updateStatus('hid-status', 'WebHID API tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('hid-status', 'Meminta akses HID...', '');
+            
+            navigator.hid.requestDevice({ filters: [] })
+            .then(devices => {
+                updateStatus('hid-status', `Terhubung ke ${devices.length} perangkat`, 'success');
+            })
+            .catch(error => {
+                updateStatus('hid-status', `Gagal: ${error.message}`, 'error');
+            });
+        }
+        
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenEnabled) {
+                updateStatus('fullscreen-status', 'Mode layar penuh tidak didukung', 'error');
+                return;
+            }
+            
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen()
+                    .then(() => {
+                        updateStatus('fullscreen-status', 'Layar penuh aktif', 'success');
+                    })
+                    .catch(err => {
+                        updateStatus('fullscreen-status', `Error: ${err.message}`, 'error');
+                    });
+            } else {
+                document.exitFullscreen();
+                updateStatus('fullscreen-status', 'Mode normal', '');
+            }
+        }
+        
+        // Pointer Lock
+        function togglePointerLock() {
+            if (!document.pointerLockElement) {
+                document.body.requestPointerLock();
+                updateStatus('pointerlock-status', 'Pointer terkunci', 'success');
+            } else {
+                document.exitPointerLock();
+                updateStatus('pointerlock-status', 'Pointer tidak terkunci', '');
+            }
+        }
+        
+        // Clipboard
+        function copyToClipboard() {
+            if (!navigator.clipboard) {
+                updateStatus('clipboard-status', 'Clipboard API tidak didukung', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText('Teks contoh dari demo Web API')
+                .then(() => {
+                    updateStatus('clipboard-status', 'Teks disalin ke clipboard', 'success');
+                })
+                .catch(err => {
+                    updateStatus('clipboard-status', `Gagal: ${err.message}`, 'error');
+                });
+        }
+        
+        // Device Orientation
+        function checkDeviceOrientation() {
+            if (!window.DeviceOrientationEvent) {
+                updateStatus('orientation-status', 'Device Orientation tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('orientation-status', 'Mendeteksi orientasi perangkat...', '');
+            
+            window.addEventListener('deviceorientation', function(event) {
+                updateStatus('orientation-status', `Alpha: ${event.alpha.toFixed(2)}, Beta: ${event.beta.toFixed(2)}, Gamma: ${event.gamma.toFixed(2)}`, 'success');
+            });
+        }
+        
+        // Device Motion
+        function checkDeviceMotion() {
+            if (!window.DeviceMotionEvent) {
+                updateStatus('motion-status', 'Device Motion tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('motion-status', 'Mendeteksi gerakan perangkat...', '');
+            
+            window.addEventListener('devicemotion', function(event) {
+                updateStatus('motion-status', `Akselerasi: x=${event.acceleration.x?.toFixed(2)}, y=${event.acceleration.y?.toFixed(2)}, z=${event.acceleration.z?.toFixed(2)}`, 'success');
+            });
+        }
+        
+        // VR
+        function checkVR() {
+            if (!navigator.xr) {
+                updateStatus('vr-status', 'WebXR API tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('vr-status', 'Memeriksa dukungan VR...', '');
+            
+            navigator.xr.isSessionSupported('immersive-vr')
+                .then(supported => {
+                    updateStatus('vr-status', supported ? 'VR didukung' : 'VR tidak didukung', supported ? 'success' : 'error');
+                })
+                .catch(error => {
+                    updateStatus('vr-status', `Error: ${error.message}`, 'error');
+                });
+        }
+        
+        // AR
+        function checkAR() {
+            if (!navigator.xr) {
+                updateStatus('ar-status', 'WebXR API tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('ar-status', 'Memeriksa dukungan AR...', '');
+            
+            navigator.xr.isSessionSupported('immersive-ar')
+                .then(supported => {
+                    updateStatus('ar-status', supported ? 'AR didukung' : 'AR tidak didukung', supported ? 'success' : 'error');
+                })
+                .catch(error => {
+                    updateStatus('ar-status', `Error: ${error.message}`, 'error');
+                });
+        }
+        
+        // NFC
+        function checkNFC() {
+            if (!('NDEFReader' in window)) {
+                updateStatus('nfc-status', 'Web NFC API tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('nfc-status', 'Web NFC didukung', 'success');
+        }
+        
+        // WebAuthn
+        function checkWebAuthn() {
+            if (!window.PublicKeyCredential) {
+                updateStatus('webauthn-status', 'WebAuthn tidak didukung', 'error');
+                return;
+            }
+            
+            updateStatus('webauthn-status', 'WebAuthn didukung', 'success');
+        }
+        
+        // Popup
+        function showPopup() {
+            const popup = window.open('', '_blank', 'width=400,height=300');
+            if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+                updateStatus('popup-status', 'Popup diblokir oleh browser', 'error');
+                return;
+            }
+            
+            popup.document.write('<html><head><title>Demo Popup</title></head>');
+            popup.document.write('<body style="display: flex; justify-content: center; align-items: center; height: 100%;">');
+            popup.document.write('<h2>Ini adalah contoh popup!</h2>');
+            popup.document.write('</body></html>');
+            popup.document.close();
+            
+            updateStatus('popup-status', 'Popup dibuka', 'success');
+        }
+        
+        // Delayed Popup
+        function showDelayedPopup() {
+            updateStatus('delayed-popup-status', 'Popup akan terbuka dalam 5 detik...', '');
+            
+            setTimeout(() => {
+                showPopup();
+                updateStatus('delayed-popup-status', 'Popup dibuka (setelah 5 detik)', 'success');
+            }, 5000);
+        }
+        
+        // Utility function untuk update status
+        function updateStatus(elementId, message, statusClass) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'status';
+            
+            if (statusClass) {
+                element.classList.add(statusClass);
+            }
+        }
+        
+        // Event listener untuk keluar dari fullscreen dan pointer lock
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                updateStatus('fullscreen-status', 'Mode normal', '');
+            }
+        });
+        
+        document.addEventListener('pointerlockchange', () => {
+            if (!document.pointerLockElement) {
+                updateStatus('pointerlock-status', 'Pointer tidak terkunci', '');
+            }
+        });
+    </script>
+</body>
+</html>
