@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share API Example</title>
+</head>
+<body>
+    <h1>Halaman Sederhana dengan Share API</h1>
+    <p>Klik tombol di bawah untuk membagikan halaman ini:</p>
+    
+    <button id="shareButton">Bagikan Halaman Ini</button>
+    
+    <script>
+        document.getElementById('shareButton').addEventListener('click', async () => {
+            // Data yang akan dibagikan
+            const shareData = {
+                title: 'Halaman Sederhana',
+                text: 'Lihat halaman web sederhana ini!',
+                url: window.location.href
+            };
+            
+            try {
+                // Cek apakah browser mendukung Share API
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    console.log('Berhasil dibagikan!');
+                } else {
+                    alert('Browser Anda tidak mendukung Share API. Silakan salin URL secara manual: ' + window.location.href);
+                }
+            } catch (error) {
+                console.log('Error sharing:', error);
+            }
+        });
+    </script>
+</body>
+</html>
