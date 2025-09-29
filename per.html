@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard API Browser Lengkap (30+ API)</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .api-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d1146a;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #3aa8d1;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e08618;
+        }
+        
+        .btn-info {
+            background-color: var(--info);
+        }
+        
+        .btn-info:hover {
+            background-color: #3a7fd8;
+        }
+        
+        .status {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        .status-success {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success);
+        }
+        
+        .status-error {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: var(--danger);
+        }
+        
+        .status-warning {
+            background-color: rgba(248, 150, 30, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-info {
+            background-color: rgba(72, 149, 239, 0.2);
+            color: var(--info);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .log-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .log-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .log-content {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .log-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+        
+        .log-message {
+            margin-top: 3px;
+        }
+        
+        .clear-log {
+            float: right;
+            background-color: var(--gray);
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .clear-log:hover {
+            background-color: #5a6268;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard API Browser Lengkap</h1>
+            <p class="subtitle">Halaman untuk memicu berbagai API browser yang tersedia</p>
+            <div class="api-count">Lebih dari 30 API Browser</div>
+        </header>
+        
+        <div class="dashboard">
+            <!-- Dialog APIs -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💬</div>
+                    <h3 class="card-title">Dialog APIs</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Menampilkan berbagai jenis dialog browser</p>
+                    <div class="card-actions">
+                        <button id="showAlert" class="btn">Alert</button>
+                        <button id="showConfirm" class="btn btn-warning">Confirm</button>
+                        <button id="showPrompt" class="btn btn-info">Prompt</button>
+                    </div>
+                    <div id="dialogStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Geolocation API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📍</div>
+                    <h3 class="card-title">Geolocation API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan lokasi geografis pengguna</p>
+                    <div class="card-actions">
+                        <button id="getLocation" class="btn">Dapatkan Lokasi</button>
+                        <button id="watchLocation" class="btn btn-info">Pantau Lokasi</button>
+                        <button id="stopWatchLocation" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="locationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Notification API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔔</div>
+                    <h3 class="card-title">Notification API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Tampilkan notifikasi browser</p>
+                    <input type="text" id="notificationTitle" placeholder="Judul notifikasi" value="Dashboard API">
+                    <input type="text" id="notificationBody" placeholder="Isi notifikasi" value="Ini adalah contoh notifikasi">
+                    <div class="card-actions">
+                        <button id="requestNotification" class="btn">Minta Izin</button>
+                        <button id="showNotification" class="btn btn-success" disabled>Tampilkan</button>
+                    </div>
+                    <div id="notificationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Clipboard API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📋</div>
+                    <h3 class="card-title">Clipboard API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Salin dan tempel teks ke clipboard</p>
+                    <input type="text" id="clipboardText" placeholder="Teks untuk disalin" value="Teks contoh untuk clipboard">
+                    <div class="card-actions">
+                        <button id="copyText" class="btn">Salin Teks</button>
+                        <button id="pasteText" class="btn btn-success">Tempel Teks</button>
+                        <button id="copyImage" class="btn btn-info">Salin Gambar</button>
+                    </div>
+                    <div id="clipboardStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Vibration API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📳</div>
+                    <h3 class="card-title">Vibration API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Getarkan perangkat (jika didukung)</p>
+                    <div class="card-actions">
+                        <button id="vibrateOnce" class="btn">Getar Sekali</button>
+                        <button id="vibratePattern" class="btn btn-warning">Pola Getar</button>
+                        <button id="stopVibration" class="btn btn-danger">Hentikan</button>
+                    </div>
+                    <div id="vibrationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Fullscreen API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🖥️</div>
+                    <h3 class="card-title">Fullscreen API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Masuk dan keluar dari mode layar penuh</p>
+                    <div class="card-actions">
+                        <button id="enterFullscreen" class="btn">Layar Penuh</button>
+                        <button id="exitFullscreen" class="btn btn-danger" disabled>Keluar</button>
+                    </div>
+                    <div id="fullscreenStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Speech Synthesis API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🗣️</div>
+                    <h3 class="card-title">Speech Synthesis API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Ucapkan teks menggunakan sintesis suara</p>
+                    <input type="text" id="speechText" placeholder="Teks untuk diucapkan" value="Halo, ini adalah demo sintesis suara">
+                    <div class="card-actions">
+                        <button id="speakText" class="btn">Ucapkan</button>
+                        <button id="stopSpeech" class="btn btn-danger">Hentikan</button>
+                        <button id="listVoices" class="btn btn-info">Daftar Suara</button>
+                    </div>
+                    <div id="speechStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Speech Recognition API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎤</div>
+                    <h3 class="card-title">Speech Recognition API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Konversi ucapan menjadi teks</p>
+                    <div class="card-actions">
+                        <button id="startRecognition" class="btn">Mulai</button>
+                        <button id="stopRecognition" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="recognitionStatus" class="status"></div>
+                    <div id="recognitionResult" class="status status-info"></div>
+                </div>
+            </div>
+            
+            <!-- Battery API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔋</div>
+                    <h3 class="card-title">Battery API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan informasi status baterai</p>
+                    <div class="card-actions">
+                        <button id="getBattery" class="btn">Info Baterai</button>
+                    </div>
+                    <div id="batteryStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Media Devices API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📷</div>
+                    <h3 class="card-title">Media Devices API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses kamera dan mikrofon perangkat</p>
+                    <div class="card-actions">
+                        <button id="getMedia" class="btn">Akses Kamera</button>
+                        <button id="stopMedia" class="btn btn-danger" disabled>Hentikan</button>
+                        <button id="takePhoto" class="btn btn-success" disabled>Ambil Foto</button>
+                    </div>
+                    <div id="mediaStatus" class="status"></div>
+                    <video id="videoElement" autoplay muted width="100%" style="display: none; margin-top: 10px;"></video>
+                    <canvas id="canvasElement" style="display: none;"></canvas>
+                </div>
+            </div>
+            
+            <!-- Storage API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💾</div>
+                    <h3 class="card-title">Storage API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Simpan dan ambil data menggunakan localStorage</p>
+                    <input type="text" id="storageKey" placeholder="Kunci" value="dataContoh">
+                    <input type="text" id="storageValue" placeholder="Nilai" value="Nilai contoh untuk disimpan">
+                    <div class="card-actions">
+                        <button id="saveData" class="btn">Simpan</button>
+                        <button id="loadData" class="btn btn-success">Muat</button>
+                        <button id="clearData" class="btn btn-danger">Hapus</button>
+                    </div>
+                    <div id="storageStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Payment Request API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💳</div>
+                    <h3 class="card-title">Payment Request API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Simulasikan proses pembayaran</p>
+                    <div class="card-actions">
+                        <button id="requestPayment" class="btn">Minta Pembayaran</button>
+                    </div>
+                    <div id="paymentStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Share API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📤</div>
+                    <h3 class="card-title">Share API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Bagikan konten melalui native share dialog</p>
+                    <input type="text" id="shareTitle" placeholder="Judul" value="Dashboard API Browser">
+                    <input type="text" id="shareText" placeholder="Teks" value="Coba dashboard API browser ini!">
+                    <input type="text" id="shareUrl" placeholder="URL" value="https://example.com">
+                    <div class="card-actions">
+                        <button id="shareContent" class="btn">Bagikan</button>
+                    </div>
+                    <div id="shareStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Bluetooth API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                    <h3 class="card-title">Bluetooth API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses perangkat Bluetooth (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestBluetooth" class="btn">Minta Perangkat</button>
+                    </div>
+                    <div id="bluetoothStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Credential Management API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔐</div>
+                    <h3 class="card-title">Credential Management API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Kelola kredensial pengguna</p>
+                    <div class="card-actions">
+                        <button id="getCredentials" class="btn">Dapatkan Kredensial</button>
+                        <button id="storeCredentials" class="btn btn-success">Simpan Kredensial</button>
+                    </div>
+                    <div id="credentialStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Device Orientation API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📐</div>
+                    <h3 class="card-title">Device Orientation API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan informasi orientasi perangkat</p>
+                    <div class="card-actions">
+                        <button id="startOrientation" class="btn">Mulai</button>
+                        <button id="stopOrientation" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="orientationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Device Motion API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title">Device Motion API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan informasi gerakan perangkat</p>
+                    <div class="card-actions">
+                        <button id="startMotion" class="btn">Mulai</button>
+                        <button id="stopMotion" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="motionStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Network Information API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📶</div>
+                    <h3 class="card-title">Network Information API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan informasi koneksi jaringan</p>
+                    <div class="card-actions">
+                        <button id="getNetworkInfo" class="btn">Info Jaringan</button>
+                    </div>
+                    <div id="networkStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Pointer Lock API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">Pointer Lock API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Kunci pointer mouse ke elemen</p>
+                    <div class="card-actions">
+                        <button id="requestPointerLock" class="btn">Kunci Pointer</button>
+                        <button id="exitPointerLock" class="btn btn-danger" disabled>Lepaskan</button>
+                    </div>
+                    <div id="pointerLockStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Screen Orientation API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <h3 class="card-title">Screen Orientation API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Dapatkan dan atur orientasi layar</p>
+                    <div class="card-actions">
+                        <button id="getOrientation" class="btn">Dapatkan Orientasi</button>
+                        <button id="lockOrientation" class="btn btn-warning">Kunci Landscape</button>
+                        <button id="unlockOrientation" class="btn btn-danger">Buka Kunci</button>
+                    </div>
+                    <div id="screenOrientationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web MIDI API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎹</div>
+                    <h3 class="card-title">Web MIDI API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses perangkat MIDI (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestMIDI" class="btn">Akses MIDI</button>
+                    </div>
+                    <div id="midiStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- WebUSB API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔌</div>
+                    <h3 class="card-title">WebUSB API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses perangkat USB (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestUSB" class="btn">Akses USB</button>
+                    </div>
+                    <div id="usbStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web NFC API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📲</div>
+                    <h3 class="card-title">Web NFC API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Baca/tulis tag NFC (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="startNFC" class="btn">Mulai NFC</button>
+                        <button id="stopNFC" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="nfcStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- WebXR API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👓</div>
+                    <h3 class="card-title">WebXR API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses perangkat VR/AR (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestXR" class="btn">Cek VR/AR</button>
+                    </div>
+                    <div id="xrStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- File System Access API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📁</div>
+                    <h3 class="card-title">File System Access API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Buka dan simpan file ke sistem file</p>
+                    <div class="card-actions">
+                        <button id="openFile" class="btn">Buka File</button>
+                        <button id="saveFile" class="btn btn-success">Simpan File</button>
+                    </div>
+                    <div id="fileSystemStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Contact Picker API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <h3 class="card-title">Contact Picker API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Pilih kontak dari perangkat</p>
+                    <div class="card-actions">
+                        <button id="pickContacts" class="btn">Pilih Kontak</button>
+                    </div>
+                    <div id="contactStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Badging API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🆕</div>
+                    <h3 class="card-title">Badging API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Atur badge pada ikon aplikasi</p>
+                    <div class="card-actions">
+                        <button id="setBadge" class="btn">Setel Badge</button>
+                        <button id="clearBadge" class="btn btn-danger">Hapus Badge</button>
+                    </div>
+                    <div id="badgeStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Idle Detection API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">😴</div>
+                    <h3 class="card-title">Idle Detection API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Deteksi status idle pengguna</p>
+                    <div class="card-actions">
+                        <button id="startIdleDetection" class="btn">Mulai Deteksi</button>
+                        <button id="stopIdleDetection" class="btn btn-danger" disabled>Hentikan</button>
+                    </div>
+                    <div id="idleStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Presentation API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📺</div>
+                    <h3 class="card-title">Presentation API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Tampilkan konten di layar sekunder</p>
+                    <div class="card-actions">
+                        <button id="startPresentation" class="btn">Mulai Presentasi</button>
+                        <button id="reconnectPresentation" class="btn btn-info">Sambung Ulang</button>
+                    </div>
+                    <div id="presentationStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web Authentication API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔑</div>
+                    <h3 class="card-title">Web Authentication API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Autentikasi dengan WebAuthn</p>
+                    <div class="card-actions">
+                        <button id="createCredential" class="btn">Buat Kredensial</button>
+                        <button id="getAssertion" class="btn btn-success">Dapatkan Assertion</button>
+                    </div>
+                    <div id="webauthnStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web Serial API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🖨️</div>
+                    <h3 class="card-title">Web Serial API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses port serial (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestSerial" class="btn">Akses Serial</button>
+                    </div>
+                    <div id="serialStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- WebHID API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎮</div>
+                    <h3 class="card-title">WebHID API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Akses perangkat HID (eksperimental)</p>
+                    <div class="card-actions">
+                        <button id="requestHID" class="btn">Akses HID</button>
+                    </div>
+                    <div id="hidStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web Locks API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔒</div>
+                    <h3 class="card-title">Web Locks API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Kelola kunci sumber daya</p>
+                    <div class="card-actions">
+                        <button id="acquireLock" class="btn">Dapatkan Kunci</button>
+                        <button id="releaseLock" class="btn btn-danger">Lepaskan Kunci</button>
+                    </div>
+                    <div id="lockStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Web Share Target API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">Web Share Target API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Terima data yang dibagikan dari aplikasi lain</p>
+                    <div class="card-actions">
+                        <button id="checkShareTarget" class="btn">Cek Share Target</button>
+                    </div>
+                    <div id="shareTargetStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Periodic Background Sync API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <h3 class="card-title">Periodic Background Sync API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Sinkronisasi data di latar belakang</p>
+                    <div class="card-actions">
+                        <button id="registerPeriodicSync" class="btn">Daftarkan Sync</button>
+                    </div>
+                    <div id="periodicSyncStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- Content Index API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📑</div>
+                    <h3 class="card-title">Content Index API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Kelola indeks konten untuk PWA</p>
+                    <div class="card-actions">
+                        <button id="addToContentIndex" class="btn">Tambahkan ke Indeks</button>
+                        <button id="getContentIndex" class="btn btn-info">Dapatkan Indeks</button>
+                    </div>
+                    <div id="contentIndexStatus" class="status"></div>
+                </div>
+            </div>
+            
+            <!-- App Badging API -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">1️⃣</div>
+                    <h3 class="card-title">App Badging API</h3>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Atur badge pada ikon aplikasi</p>
+                    <div class="card-actions">
+                        <button id="setAppBadge" class="btn">Setel Badge</button>
+                        <button id="clearAppBadge" class="btn btn-danger">Hapus Badge</button>
+                    </div>
+                    <div id="appBadgeStatus" class="status"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="log-container">
+            <h3 class="log-title">Log Aktivitas <button id="clearLog" class="btn clear-log">Bersihkan Log</button></h3>
+            <div id="activityLog" class="log-content">
+                <!-- Log entries will be added here -->
+            </div>
+        </div>
+        
+        <footer>
+            <p>Dashboard API Browser &copy; 2023 - Lebih dari 30 API browser yang tersedia</p>
+        </footer>
+    </div>
+
+    <script>
+        // Logging function
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('activityLog');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = document.createElement('div');
+            logMessage.className = 'log-message';
+            logMessage.textContent = message;
+            
+            const timeElement = document.createElement('div');
+            timeElement.className = 'log-time';
+            timeElement.textContent = timestamp;
+            
+            logEntry.appendChild(timeElement);
+            logEntry.appendChild(logMessage);
+            
+            if (type === 'error') {
+                logMessage.style.color = 'var(--danger)';
+            } else if (type === 'success') {
+                logMessage.style.color = 'var(--success)';
+            } else if (type === 'warning') {
+                logMessage.style.color = 'var(--warning)';
+            } else if (type === 'info') {
+                logMessage.style.color = 'var(--info)';
+            }
+            
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        // Clear log button
+        document.getElementById('clearLog').addEventListener('click', function() {
+            document.getElementById('activityLog').innerHTML = '';
+            addLog('Log berhasil dibersihkan', 'success');
+        });
+        
+        // Dialog APIs
+        document.getElementById('showAlert').addEventListener('click', function() {
+            alert('Ini adalah contoh alert dialog!');
+            document.getElementById('dialogStatus').textContent = 'Alert ditampilkan';
+            document.getElementById('dialogStatus').className = 'status status-success';
+            addLog('Alert dialog ditampilkan', 'success');
+        });
+        
+        document.getElementById('showConfirm').addEventListener('click', function() {
+            const result = confirm('Apakah Anda yakin?');
+            document.getElementById('dialogStatus').textContent = `Konfirmasi: ${result ? 'Ya' : 'Tidak'}`;
+            document.getElementById('dialogStatus').className = 'status ' + (result ? 'status-success' : 'status-warning');
+            addLog(`Dialog konfirmasi: ${result ? 'Ya' : 'Tidak'}`, result ? 'success' : 'warning');
+        });
+        
+        document.getElementById('showPrompt').addEventListener('click', function() {
+            const result = prompt('Masukkan teks:', 'Teks default');
+            document.getElementById('dialogStatus').textContent = `Prompt: ${result !== null ? result : 'Dibatalkan'}`;
+            document.getElementById('dialogStatus').className = 'status ' + (result !== null ? 'status-success' : 'status-warning');
+            addLog(`Dialog prompt: ${result !== null ? result : 'Dibatalkan'}`, result !== null ? 'success' : 'warning');
+        });
+        
+        // Geolocation API
+        let watchId = null;
+        
+        document.getElementById('getLocation').addEventListener('click', function() {
+            const statusElement = document.getElementById('locationStatus');
+            
+            if (!navigator.geolocation) {
+                statusElement.textContent = 'Geolocation tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Geolocation tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendapatkan lokasi...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    statusElement.innerHTML = `Lokasi berhasil didapatkan:<br>Latitude: ${latitude}<br>Longitude: ${longitude}`;
+                    statusElement.className = 'status status-success';
+                    addLog(`Lokasi berhasil didapatkan: Latitude ${latitude}, Longitude ${longitude}`, 'success');
+                },
+                function(error) {
+                    let errorMessage = 'Gagal mendapatkan lokasi: ';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Izin ditolak pengguna';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Informasi lokasi tidak tersedia';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Permintaan lokasi timeout';
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            errorMessage += 'Error tidak diketahui';
+                            break;
+                    }
+                    
+                    statusElement.textContent = errorMessage;
+                    statusElement.className = 'status status-error';
+                    addLog(errorMessage, 'error');
+                }
+            );
+        });
+        
+        document.getElementById('watchLocation').addEventListener('click', function() {
+            const statusElement = document.getElementById('locationStatus');
+            
+            if (!navigator.geolocation) {
+                statusElement.textContent = 'Geolocation tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Geolocation tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Memantau lokasi...';
+            statusElement.className = 'status status-warning';
+            
+            document.getElementById('watchLocation').disabled = true;
+            document.getElementById('stopWatchLocation').disabled = false;
+            
+            watchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    statusElement.innerHTML = `Lokasi diperbarui:<br>Latitude: ${latitude}<br>Longitude: ${longitude}`;
+                    statusElement.className = 'status status-success';
+                    addLog(`Lokasi diperbarui: Latitude ${latitude}, Longitude ${longitude}`, 'info');
+                },
+                function(error) {
+                    let errorMessage = 'Gagal memantau lokasi: ';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Izin ditolak pengguna';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Informasi lokasi tidak tersedia';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Permintaan lokasi timeout';
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            errorMessage += 'Error tidak diketahui';
+                            break;
+                    }
+                    
+                    statusElement.textContent = errorMessage;
+                    statusElement.className = 'status status-error';
+                    addLog(errorMessage, 'error');
+                    
+                    document.getElementById('watchLocation').disabled = false;
+                    document.getElementById('stopWatchLocation').disabled = true;
+                }
+            );
+            
+            addLog('Memulai pemantauan lokasi', 'info');
+        });
+        
+        document.getElementById('stopWatchLocation').addEventListener('click', function() {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                
+                document.getElementById('locationStatus').textContent = 'Pemantauan lokasi dihentikan';
+                document.getElementById('locationStatus').className = 'status status-success';
+                
+                document.getElementById('watchLocation').disabled = false;
+                document.getElementById('stopWatchLocation').disabled = true;
+                
+                addLog('Pemantauan lokasi dihentikan', 'success');
+            }
+        });
+        
+        // Notification API
+        const notificationBtn = document.getElementById('showNotification');
+        
+        document.getElementById('requestNotification').addEventListener('click', function() {
+            const statusElement = document.getElementById('notificationStatus');
+            
+            if (!('Notification' in window)) {
+                statusElement.textContent = 'Browser tidak mendukung Notifikasi';
+                statusElement.className = 'status status-error';
+                addLog('Browser tidak mendukung Notifikasi', 'error');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                statusElement.textContent = 'Izin notifikasi sudah diberikan';
+                statusElement.className = 'status status-success';
+                notificationBtn.disabled = false;
+                addLog('Izin notifikasi sudah diberikan', 'success');
+                return;
+            }
+            
+            if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        statusElement.textContent = 'Izin notifikasi diberikan';
+                        statusElement.className = 'status status-success';
+                        notificationBtn.disabled = false;
+                        addLog('Izin notifikasi diberikan', 'success');
+                    } else {
+                        statusElement.textContent = 'Izin notifikasi ditolak';
+                        statusElement.className = 'status status-error';
+                        addLog('Izin notifikasi ditolak', 'error');
+                    }
+                });
+            } else {
+                statusElement.textContent = 'Izin notifikasi sebelumnya sudah ditolak';
+                statusElement.className = 'status status-error';
+                addLog('Izin notifikasi sebelumnya sudah ditolak', 'error');
+            }
+        });
+        
+        notificationBtn.addEventListener('click', function() {
+            if (Notification.permission === 'granted') {
+                const title = document.getElementById('notificationTitle').value || 'Dashboard API';
+                const body = document.getElementById('notificationBody').value || 'Ini adalah contoh notifikasi';
+                
+                const notification = new Notification(title, {
+                    body: body,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png'
+                });
+                
+                notification.onclick = function() {
+                    addLog('Notifikasi diklik', 'info');
+                };
+                
+                addLog('Notifikasi berhasil ditampilkan', 'success');
+            }
+        });
+        
+        // Clipboard API
+        document.getElementById('copyText').addEventListener('click', function() {
+            const textToCopy = document.getElementById('clipboardText').value;
+            const statusElement = document.getElementById('clipboardStatus');
+            
+            if (!navigator.clipboard) {
+                statusElement.textContent = 'Clipboard API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Clipboard API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                statusElement.textContent = 'Teks berhasil disalin ke clipboard';
+                statusElement.className = 'status status-success';
+                addLog(`Teks "${textToCopy}" berhasil disalin ke clipboard`, 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menyalin teks: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyalin teks: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('pasteText').addEventListener('click', function() {
+            const statusElement = document.getElementById('clipboardStatus');
+            
+            if (!navigator.clipboard) {
+                statusElement.textContent = 'Clipboard API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Clipboard API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.clipboard.readText().then(function(text) {
+                document.getElementById('clipboardText').value = text;
+                statusElement.textContent = 'Teks berhasil ditempel dari clipboard';
+                statusElement.className = 'status status-success';
+                addLog(`Teks "${text}" berhasil ditempel dari clipboard`, 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menempel teks: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menempel teks: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('copyImage').addEventListener('click', function() {
+            const statusElement = document.getElementById('clipboardStatus');
+            
+            if (!navigator.clipboard) {
+                statusElement.textContent = 'Clipboard API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Clipboard API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            // Create a simple image for demonstration
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 100;
+            canvas.height = 100;
+            ctx.fillStyle = '#4361ee';
+            ctx.fillRect(0, 0, 100, 100);
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText('Demo', 20, 50);
+            
+            canvas.toBlob(function(blob) {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(function() {
+                    statusElement.textContent = 'Gambar berhasil disalin ke clipboard';
+                    statusElement.className = 'status status-success';
+                    addLog('Gambar berhasil disalin ke clipboard', 'success');
+                }).catch(function(err) {
+                    statusElement.textContent = 'Gagal menyalin gambar: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal menyalin gambar: ${err}`, 'error');
+                });
+            });
+        });
+        
+        // Vibration API
+        document.getElementById('vibrateOnce').addEventListener('click', function() {
+            const statusElement = document.getElementById('vibrationStatus');
+            
+            if (!navigator.vibrate) {
+                statusElement.textContent = 'Vibration API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Vibration API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.vibrate(200);
+            statusElement.textContent = 'Getaran 200ms diaktifkan';
+            statusElement.className = 'status status-success';
+            addLog('Getaran 200ms diaktifkan', 'success');
+        });
+        
+        document.getElementById('vibratePattern').addEventListener('click', function() {
+            const statusElement = document.getElementById('vibrationStatus');
+            
+            if (!navigator.vibrate) {
+                statusElement.textContent = 'Vibration API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Vibration API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.vibrate([100, 50, 100, 50, 100]);
+            statusElement.textContent = 'Pola getar diaktifkan';
+            statusElement.className = 'status status-success';
+            addLog('Pola getar diaktifkan', 'success');
+        });
+        
+        document.getElementById('stopVibration').addEventListener('click', function() {
+            const statusElement = document.getElementById('vibrationStatus');
+            
+            if (!navigator.vibrate) {
+                statusElement.textContent = 'Vibration API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Vibration API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.vibrate(0);
+            statusElement.textContent = 'Getaran dihentikan';
+            statusElement.className = 'status status-success';
+            addLog('Getaran dihentikan', 'success');
+        });
+        
+        // Fullscreen API
+        const enterFullscreenBtn = document.getElementById('enterFullscreen');
+        const exitFullscreenBtn = document.getElementById('exitFullscreen');
+        const fullscreenStatus = document.getElementById('fullscreenStatus');
+        
+        enterFullscreenBtn.addEventListener('click', function() {
+            if (!document.fullscreenEnabled) {
+                fullscreenStatus.textContent = 'Fullscreen API tidak didukung browser ini';
+                fullscreenStatus.className = 'status status-error';
+                addLog('Fullscreen API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            document.documentElement.requestFullscreen().then(function() {
+                enterFullscreenBtn.disabled = true;
+                exitFullscreenBtn.disabled = false;
+                fullscreenStatus.textContent = 'Mode layar penuh diaktifkan';
+                fullscreenStatus.className = 'status status-success';
+                addLog('Mode layar penuh diaktifkan', 'success');
+            }).catch(function(err) {
+                fullscreenStatus.textContent = 'Gagal masuk mode layar penuh: ' + err;
+                fullscreenStatus.className = 'status status-error';
+                addLog(`Gagal masuk mode layar penuh: ${err}`, 'error');
+            });
+        });
+        
+        exitFullscreenBtn.addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                fullscreenStatus.textContent = 'Tidak dalam mode layar penuh';
+                fullscreenStatus.className = 'status status-warning';
+                addLog('Tidak dalam mode layar penuh', 'warning');
+                return;
+            }
+            
+            document.exitFullscreen().then(function() {
+                enterFullscreenBtn.disabled = false;
+                exitFullscreenBtn.disabled = true;
+                fullscreenStatus.textContent = 'Mode layar penuh dinonaktifkan';
+                fullscreenStatus.className = 'status status-success';
+                addLog('Mode layar penuh dinonaktifkan', 'success');
+            }).catch(function(err) {
+                fullscreenStatus.textContent = 'Gagal keluar mode layar penuh: ' + err;
+                fullscreenStatus.className = 'status status-error';
+                addLog(`Gagal keluar mode layar penuh: ${err}`, 'error');
+            });
+        });
+        
+        // Speech Synthesis API
+        let speechSynthesis = window.speechSynthesis;
+        
+        document.getElementById('speakText').addEventListener('click', function() {
+            const textToSpeak = document.getElementById('speechText').value;
+            const statusElement = document.getElementById('speechStatus');
+            
+            if (!speechSynthesis) {
+                statusElement.textContent = 'Speech Synthesis API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Speech Synthesis API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'id-ID';
+            
+            utterance.onstart = function() {
+                statusElement.textContent = 'Sedang mengucapkan teks...';
+                statusElement.className = 'status status-warning';
+                addLog(`Memulai pengucapan: "${textToSpeak}"`, 'info');
+            };
+            
+            utterance.onend = function() {
+                statusElement.textContent = 'Pengucapan selesai';
+                statusElement.className = 'status status-success';
+                addLog('Pengucapan selesai', 'success');
+            };
+            
+            utterance.onerror = function(event) {
+                statusElement.textContent = 'Error dalam pengucapan: ' + event.error;
+                statusElement.className = 'status status-error';
+                addLog(`Error dalam pengucapan: ${event.error}`, 'error');
+            };
+            
+            speechSynthesis.speak(utterance);
+        });
+        
+        document.getElementById('stopSpeech').addEventListener('click', function() {
+            if (!speechSynthesis) {
+                return;
+            }
+            
+            speechSynthesis.cancel();
+            document.getElementById('speechStatus').textContent = 'Pengucapan dihentikan';
+            document.getElementById('speechStatus').className = 'status status-success';
+            addLog('Pengucapan dihentikan', 'success');
+        });
+        
+        document.getElementById('listVoices').addEventListener('click', function() {
+            if (!speechSynthesis) {
+                return;
+            }
+            
+            const voices = speechSynthesis.getVoices();
+            let voicesInfo = `Tersedia ${voices.length} suara: `;
+            
+            voices.forEach((voice, index) => {
+                if (index < 3) { // Show only first 3 to avoid too long message
+                    voicesInfo += `${voice.name} (${voice.lang}), `;
+                }
+            });
+            
+            document.getElementById('speechStatus').textContent = voicesInfo;
+            document.getElementById('speechStatus').className = 'status status-info';
+            addLog(`Daftar suara: ${voices.length} suara tersedia`, 'info');
+        });
+        
+        // Speech Recognition API
+        let recognition = null;
+        const startRecognitionBtn = document.getElementById('startRecognition');
+        const stopRecognitionBtn = document.getElementById('stopRecognition');
+        
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'id-ID';
+            
+            recognition.onstart = function() {
+                document.getElementById('recognitionStatus').textContent = 'Mendengarkan...';
+                document.getElementById('recognitionStatus').className = 'status status-warning';
+                startRecognitionBtn.disabled = true;
+                stopRecognitionBtn.disabled = false;
+                addLog('Pengenalan suara dimulai', 'info');
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('recognitionResult').textContent = `Hasil: ${transcript}`;
+                document.getElementById('recognitionStatus').textContent = 'Selesai';
+                document.getElementById('recognitionStatus').className = 'status status-success';
+                addLog(`Pengenalan suara: "${transcript}"`, 'success');
+            };
+            
+            recognition.onerror = function(event) {
+                document.getElementById('recognitionStatus').textContent = 'Error: ' + event.error;
+                document.getElementById('recognitionStatus').className = 'status status-error';
+                addLog(`Error pengenalan suara: ${event.error}`, 'error');
+                startRecognitionBtn.disabled = false;
+                stopRecognitionBtn.disabled = true;
+            };
+            
+            recognition.onend = function() {
+                startRecognitionBtn.disabled = false;
+                stopRecognitionBtn.disabled = true;
+            };
+        }
+        
+        startRecognitionBtn.addEventListener('click', function() {
+            if (recognition) {
+                recognition.start();
+            } else {
+                document.getElementById('recognitionStatus').textContent = 'Speech Recognition tidak didukung';
+                document.getElementById('recognitionStatus').className = 'status status-error';
+                addLog('Speech Recognition tidak didukung browser ini', 'error');
+            }
+        });
+        
+        stopRecognitionBtn.addEventListener('click', function() {
+            if (recognition) {
+                recognition.stop();
+                startRecognitionBtn.disabled = false;
+                stopRecognitionBtn.disabled = true;
+                addLog('Pengenalan suara dihentikan', 'success');
+            }
+        });
+        
+        // Battery API
+        document.getElementById('getBattery').addEventListener('click', function() {
+            const statusElement = document.getElementById('batteryStatus');
+            
+            if (!navigator.getBattery) {
+                statusElement.textContent = 'Battery API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Battery API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.getBattery().then(function(battery) {
+                const level = Math.round(battery.level * 100);
+                const charging = battery.charging ? 'sedang diisi' : 'tidak diisi';
+                const chargingTime = battery.chargingTime === Infinity ? 'tidak diketahui' : Math.round(battery.chargingTime / 60) + ' menit';
+                const dischargingTime = battery.dischargingTime === Infinity ? 'tidak diketahui' : Math.round(battery.dischargingTime / 60) + ' menit';
+                
+                statusElement.innerHTML = `Level baterai: ${level}%<br>Status: ${charging}<br>Waktu pengisian: ${chargingTime}<br>Waktu penggunaan: ${dischargingTime}`;
+                statusElement.className = 'status status-success';
+                addLog(`Info baterai: Level ${level}%, ${charging}`, 'success');
+                
+                // Add event listeners for battery changes
+                battery.addEventListener('levelchange', function() {
+                    const newLevel = Math.round(battery.level * 100);
+                    addLog(`Level baterai berubah: ${newLevel}%`, 'info');
+                });
+                
+                battery.addEventListener('chargingchange', function() {
+                    const newStatus = battery.charging ? 'sedang diisi' : 'tidak diisi';
+                    addLog(`Status pengisian baterai berubah: ${newStatus}`, 'info');
+                });
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mendapatkan info baterai: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mendapatkan info baterai: ${err}`, 'error');
+            });
+        });
+        
+        // Media Devices API
+        let mediaStream = null;
+        const getMediaBtn = document.getElementById('getMedia');
+        const stopMediaBtn = document.getElementById('stopMedia');
+        const takePhotoBtn = document.getElementById('takePhoto');
+        const videoElement = document.getElementById('videoElement');
+        const canvasElement = document.getElementById('canvasElement');
+        
+        getMediaBtn.addEventListener('click', function() {
+            const statusElement = document.getElementById('mediaStatus');
+            
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                statusElement.textContent = 'Media Devices API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Media Devices API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Meminta akses kamera...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then(function(stream) {
+                    mediaStream = stream;
+                    videoElement.srcObject = stream;
+                    videoElement.style.display = 'block';
+                    
+                    getMediaBtn.disabled = true;
+                    stopMediaBtn.disabled = false;
+                    takePhotoBtn.disabled = false;
+                    
+                    statusElement.textContent = 'Kamera berhasil diakses';
+                    statusElement.className = 'status status-success';
+                    addLog('Kamera berhasil diakses', 'success');
+                })
+                .catch(function(err) {
+                    statusElement.textContent = 'Gagal mengakses kamera: ' + err.message;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal mengakses kamera: ${err.message}`, 'error');
+                });
+        });
+        
+        stopMediaBtn.addEventListener('click', function() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                videoElement.style.display = 'none';
+                
+                getMediaBtn.disabled = false;
+                stopMediaBtn.disabled = true;
+                takePhotoBtn.disabled = true;
+                
+                document.getElementById('mediaStatus').textContent = 'Kamera dihentikan';
+                document.getElementById('mediaStatus').className = 'status status-success';
+                addLog('Kamera dihentikan', 'success');
+            }
+        });
+        
+        takePhotoBtn.addEventListener('click', function() {
+            if (mediaStream && videoElement.videoWidth > 0) {
+                const context = canvasElement.getContext('2d');
+                canvasElement.width = videoElement.videoWidth;
+                canvasElement.height = videoElement.videoHeight;
+                context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                
+                // Convert to data URL and create download link
+                const dataURL = canvasElement.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = 'foto-dari-kamera.png';
+                link.href = dataURL;
+                link.click();
+                
+                addLog('Foto berhasil diambil', 'success');
+            }
+        });
+        
+        // Storage API (localStorage)
+        document.getElementById('saveData').addEventListener('click', function() {
+            const key = document.getElementById('storageKey').value;
+            const value = document.getElementById('storageValue').value;
+            const statusElement = document.getElementById('storageStatus');
+            
+            if (!key) {
+                statusElement.textContent = 'Kunci tidak boleh kosong';
+                statusElement.className = 'status status-error';
+                addLog('Kunci tidak boleh kosong saat menyimpan data', 'error');
+                return;
+            }
+            
+            try {
+                localStorage.setItem(key, value);
+                statusElement.textContent = `Data berhasil disimpan dengan kunci: ${key}`;
+                statusElement.className = 'status status-success';
+                addLog(`Data berhasil disimpan dengan kunci: ${key}`, 'success');
+            } catch (err) {
+                statusElement.textContent = 'Gagal menyimpan data: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyimpan data: ${err}`, 'error');
+            }
+        });
+        
+        document.getElementById('loadData').addEventListener('click', function() {
+            const key = document.getElementById('storageKey').value;
+            const statusElement = document.getElementById('storageStatus');
+            
+            if (!key) {
+                statusElement.textContent = 'Kunci tidak boleh kosong';
+                statusElement.className = 'status status-error';
+                addLog('Kunci tidak boleh kosong saat memuat data', 'error');
+                return;
+            }
+            
+            try {
+                const value = localStorage.getItem(key);
+                
+                if (value === null) {
+                    statusElement.textContent = `Tidak ada data dengan kunci: ${key}`;
+                    statusElement.className = 'status status-warning';
+                    addLog(`Tidak ada data dengan kunci: ${key}`, 'warning');
+                } else {
+                    document.getElementById('storageValue').value = value;
+                    statusElement.textContent = `Data berhasil dimuat: ${value}`;
+                    statusElement.className = 'status status-success';
+                    addLog(`Data berhasil dimuat dengan kunci: ${key}`, 'success');
+                }
+            } catch (err) {
+                statusElement.textContent = 'Gagal memuat data: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal memuat data: ${err}`, 'error');
+            }
+        });
+        
+        document.getElementById('clearData').addEventListener('click', function() {
+            const key = document.getElementById('storageKey').value;
+            const statusElement = document.getElementById('storageStatus');
+            
+            if (!key) {
+                statusElement.textContent = 'Kunci tidak boleh kosong';
+                statusElement.className = 'status status-error';
+                addLog('Kunci tidak boleh kosong saat menghapus data', 'error');
+                return;
+            }
+            
+            try {
+                localStorage.removeItem(key);
+                statusElement.textContent = `Data dengan kunci ${key} berhasil dihapus`;
+                statusElement.className = 'status status-success';
+                addLog(`Data dengan kunci ${key} berhasil dihapus`, 'success');
+            } catch (err) {
+                statusElement.textContent = 'Gagal menghapus data: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menghapus data: ${err}`, 'error');
+            }
+        });
+        
+        // Payment Request API
+        document.getElementById('requestPayment').addEventListener('click', function() {
+            const statusElement = document.getElementById('paymentStatus');
+            
+            if (!window.PaymentRequest) {
+                statusElement.textContent = 'Payment Request API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Payment Request API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const supportedInstruments = [{
+                supportedMethods: 'basic-card',
+                data: {
+                    supportedNetworks: ['visa', 'mastercard', 'amex']
+                }
+            }];
+            
+            const details = {
+                total: {
+                    label: 'Total pembayaran',
+                    amount: {
+                        currency: 'IDR',
+                        value: '50000.00'
+                    }
+                },
+                displayItems: [{
+                    label: 'Produk contoh',
+                    amount: {
+                        currency: 'IDR',
+                        value: '45000.00'
+                    }
+                }, {
+                    label: 'Pajak',
+                    amount: {
+                        currency: 'IDR',
+                        value: '5000.00'
+                    }
+                }]
+            };
+            
+            const options = {
+                requestPayerName: true,
+                requestPayerEmail: true,
+                requestPayerPhone: true
+            };
+            
+            const request = new PaymentRequest(supportedInstruments, details, options);
+            
+            request.show().then(function(paymentResponse) {
+                statusElement.textContent = 'Pembayaran berhasil diproses (simulasi)';
+                statusElement.className = 'status status-success';
+                addLog('Pembayaran berhasil diproses (simulasi)', 'success');
+                
+                // Simulate processing
+                setTimeout(function() {
+                    paymentResponse.complete('success')
+                        .then(function() {
+                            addLog('Transaksi pembayaran selesai', 'success');
+                        });
+                }, 2000);
+            }).catch(function(err) {
+                if (err.name === 'AbortError') {
+                    statusElement.textContent = 'Pembayaran dibatalkan pengguna';
+                    statusElement.className = 'status status-warning';
+                    addLog('Pembayaran dibatalkan pengguna', 'warning');
+                } else {
+                    statusElement.textContent = 'Error dalam pembayaran: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Error dalam pembayaran: ${err}`, 'error');
+                }
+            });
+        });
+        
+        // Share API
+        document.getElementById('shareContent').addEventListener('click', function() {
+            const statusElement = document.getElementById('shareStatus');
+            
+            if (!navigator.share) {
+                statusElement.textContent = 'Share API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Share API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('shareTitle').value;
+            const text = document.getElementById('shareText').value;
+            const url = document.getElementById('shareUrl').value;
+            
+            navigator.share({
+                title: title,
+                text: text,
+                url: url
+            }).then(function() {
+                statusElement.textContent = 'Konten berhasil dibagikan';
+                statusElement.className = 'status status-success';
+                addLog('Konten berhasil dibagikan', 'success');
+            }).catch(function(err) {
+                if (err.name !== 'AbortError') {
+                    statusElement.textContent = 'Gagal membagikan konten: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal membagikan konten: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Berbagi dibatalkan';
+                    statusElement.className = 'status status-warning';
+                    addLog('Berbagi dibatalkan', 'warning');
+                }
+            });
+        });
+        
+        // Bluetooth API
+        document.getElementById('requestBluetooth').addEventListener('click', function() {
+            const statusElement = document.getElementById('bluetoothStatus');
+            
+            if (!navigator.bluetooth) {
+                statusElement.textContent = 'Bluetooth API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Bluetooth API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Meminta perangkat Bluetooth...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.bluetooth.requestDevice({
+                acceptAllDevices: true
+            }).then(function(device) {
+                statusElement.textContent = `Perangkat dipilih: ${device.name || 'Tanpa nama'}`;
+                statusElement.className = 'status status-success';
+                addLog(`Perangkat Bluetooth dipilih: ${device.name || 'Tanpa nama'}`, 'success');
+            }).catch(function(err) {
+                if (err.name !== 'NotFoundError') {
+                    statusElement.textContent = 'Gagal memilih perangkat: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memilih perangkat Bluetooth: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Tidak ada perangkat dipilih';
+                    statusElement.className = 'status status-warning';
+                    addLog('Tidak ada perangkat Bluetooth dipilih', 'warning');
+                }
+            });
+        });
+        
+        // Credential Management API
+        document.getElementById('getCredentials').addEventListener('click', function() {
+            const statusElement = document.getElementById('credentialStatus');
+            
+            if (!navigator.credentials) {
+                statusElement.textContent = 'Credential Management API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Credential Management API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.credentials.get({
+                password: true,
+                mediation: 'optional'
+            }).then(function(credential) {
+                if (credential) {
+                    statusElement.textContent = 'Kredensial ditemukan';
+                    statusElement.className = 'status status-success';
+                    addLog('Kredensial ditemukan', 'success');
+                } else {
+                    statusElement.textContent = 'Tidak ada kredensial yang ditemukan';
+                    statusElement.className = 'status status-warning';
+                    addLog('Tidak ada kredensial yang ditemukan', 'warning');
+                }
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mendapatkan kredensial: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mendapatkan kredensial: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('storeCredentials').addEventListener('click', function() {
+            const statusElement = document.getElementById('credentialStatus');
+            
+            if (!navigator.credentials) {
+                statusElement.textContent = 'Credential Management API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Credential Management API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const cred = new PasswordCredential({
+                id: 'user123',
+                password: 'password123',
+                name: 'Pengguna Contoh',
+                iconURL: 'https://example.com/icon.png'
+            });
+            
+            navigator.credentials.store(cred).then(function() {
+                statusElement.textContent = 'Kredensial berhasil disimpan';
+                statusElement.className = 'status status-success';
+                addLog('Kredensial berhasil disimpan', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menyimpan kredensial: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyimpan kredensial: ${err}`, 'error');
+            });
+        });
+        
+        // Device Orientation API
+        let orientationHandler = null;
+        const startOrientationBtn = document.getElementById('startOrientation');
+        const stopOrientationBtn = document.getElementById('stopOrientation');
+        
+        document.getElementById('startOrientation').addEventListener('click', function() {
+            const statusElement = document.getElementById('orientationStatus');
+            
+            if (!window.DeviceOrientationEvent) {
+                statusElement.textContent = 'Device Orientation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Device Orientation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendengarkan orientasi perangkat...';
+            statusElement.className = 'status status-warning';
+            
+            startOrientationBtn.disabled = true;
+            stopOrientationBtn.disabled = false;
+            
+            orientationHandler = function(event) {
+                const alpha = event.alpha ? event.alpha.toFixed(2) : 'N/A';
+                const beta = event.beta ? event.beta.toFixed(2) : 'N/A';
+                const gamma = event.gamma ? event.gamma.toFixed(2) : 'N/A';
+                
+                statusElement.innerHTML = `Orientasi:<br>Alpha: ${alpha}°<br>Beta: ${beta}°<br>Gamma: ${gamma}°`;
+                statusElement.className = 'status status-info';
+            };
+            
+            window.addEventListener('deviceorientation', orientationHandler);
+            addLog('Memulai pemantauan orientasi perangkat', 'info');
+        });
+        
+        document.getElementById('stopOrientation').addEventListener('click', function() {
+            if (orientationHandler) {
+                window.removeEventListener('deviceorientation', orientationHandler);
+                orientationHandler = null;
+                
+                document.getElementById('orientationStatus').textContent = 'Pemantauan orientasi dihentikan';
+                document.getElementById('orientationStatus').className = 'status status-success';
+                
+                startOrientationBtn.disabled = false;
+                stopOrientationBtn.disabled = true;
+                
+                addLog('Pemantauan orientasi perangkat dihentikan', 'success');
+            }
+        });
+        
+        // Device Motion API
+        let motionHandler = null;
+        const startMotionBtn = document.getElementById('startMotion');
+        const stopMotionBtn = document.getElementById('stopMotion');
+        
+        document.getElementById('startMotion').addEventListener('click', function() {
+            const statusElement = document.getElementById('motionStatus');
+            
+            if (!window.DeviceMotionEvent) {
+                statusElement.textContent = 'Device Motion API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Device Motion API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendengarkan gerakan perangkat...';
+            statusElement.className = 'status status-warning';
+            
+            startMotionBtn.disabled = true;
+            stopMotionBtn.disabled = false;
+            
+            motionHandler = function(event) {
+                const acceleration = event.acceleration;
+                const accelerationIncludingGravity = event.accelerationIncludingGravity;
+                const rotationRate = event.rotationRate;
+                
+                let info = 'Gerakan:<br>';
+                
+                if (acceleration) {
+                    info += `Akselerasi: X=${acceleration.x?.toFixed(2) || 'N/A'}, Y=${acceleration.y?.toFixed(2) || 'N/A'}, Z=${acceleration.z?.toFixed(2) || 'N/A'}<br>`;
+                }
+                
+                if (accelerationIncludingGravity) {
+                    info += `Akselerasi (dengan gravitasi): X=${accelerationIncludingGravity.x?.toFixed(2) || 'N/A'}, Y=${accelerationIncludingGravity.y?.toFixed(2) || 'N/A'}, Z=${accelerationIncludingGravity.z?.toFixed(2) || 'N/A'}<br>`;
+                }
+                
+                if (rotationRate) {
+                    info += `Rotasi: Alpha=${rotationRate.alpha?.toFixed(2) || 'N/A'}, Beta=${rotationRate.beta?.toFixed(2) || 'N/A'}, Gamma=${rotationRate.gamma?.toFixed(2) || 'N/A'}`;
+                }
+                
+                statusElement.innerHTML = info;
+                statusElement.className = 'status status-info';
+            };
+            
+            window.addEventListener('devicemotion', motionHandler);
+            addLog('Memulai pemantauan gerakan perangkat', 'info');
+        });
+        
+        document.getElementById('stopMotion').addEventListener('click', function() {
+            if (motionHandler) {
+                window.removeEventListener('devicemotion', motionHandler);
+                motionHandler = null;
+                
+                document.getElementById('motionStatus').textContent = 'Pemantauan gerakan dihentikan';
+                document.getElementById('motionStatus').className = 'status status-success';
+                
+                startMotionBtn.disabled = false;
+                stopMotionBtn.disabled = true;
+                
+                addLog('Pemantauan gerakan perangkat dihentikan', 'success');
+            }
+        });
+        
+        // Network Information API
+        document.getElementById('getNetworkInfo').addEventListener('click', function() {
+            const statusElement = document.getElementById('networkStatus');
+            
+            if (!navigator.connection) {
+                statusElement.textContent = 'Network Information API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Network Information API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const connection = navigator.connection;
+            const type = connection.effectiveType || 'Tidak diketahui';
+            const downlink = connection.downlink || 'Tidak diketahui';
+            const rtt = connection.rtt || 'Tidak diketahui';
+            const saveData = connection.saveData ? 'Aktif' : 'Tidak aktif';
+            
+            statusElement.innerHTML = `Tipe koneksi: ${type}<br>Kecepatan unduh: ${downlink} Mbps<br>RTT: ${rtt} ms<br>Mode hemat data: ${saveData}`;
+            statusElement.className = 'status status-success';
+            addLog(`Info jaringan: Tipe ${type}, Kecepatan ${downlink} Mbps`, 'success');
+        });
+        
+        // Pointer Lock API
+        const requestPointerLockBtn = document.getElementById('requestPointerLock');
+        const exitPointerLockBtn = document.getElementById('exitPointerLock');
+        
+        requestPointerLockBtn.addEventListener('click', function() {
+            const statusElement = document.getElementById('pointerLockStatus');
+            
+            if (!document.body.requestPointerLock) {
+                statusElement.textContent = 'Pointer Lock API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Pointer Lock API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            document.body.requestPointerLock().then(function() {
+                requestPointerLockBtn.disabled = true;
+                exitPointerLockBtn.disabled = false;
+                statusElement.textContent = 'Pointer terkunci';
+                statusElement.className = 'status status-success';
+                addLog('Pointer terkunci', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mengunci pointer: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mengunci pointer: ${err}`, 'error');
+            });
+        });
+        
+        exitPointerLockBtn.addEventListener('click', function() {
+            if (document.exitPointerLock) {
+                document.exitPointerLock().then(function() {
+                    requestPointerLockBtn.disabled = false;
+                    exitPointerLockBtn.disabled = true;
+                    document.getElementById('pointerLockStatus').textContent = 'Pointer dilepaskan';
+                    document.getElementById('pointerLockStatus').className = 'status status-success';
+                    addLog('Pointer dilepaskan', 'success');
+                });
+            }
+        });
+        
+        // Screen Orientation API
+        document.getElementById('getOrientation').addEventListener('click', function() {
+            const statusElement = document.getElementById('screenOrientationStatus');
+            
+            if (!screen.orientation) {
+                statusElement.textContent = 'Screen Orientation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Screen Orientation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            const type = screen.orientation.type;
+            const angle = screen.orientation.angle;
+            
+            statusElement.textContent = `Orientasi: ${type}, Sudut: ${angle}°`;
+            statusElement.className = 'status status-success';
+            addLog(`Orientasi layar: ${type}, Sudut: ${angle}°`, 'success');
+        });
+        
+        document.getElementById('lockOrientation').addEventListener('click', function() {
+            const statusElement = document.getElementById('screenOrientationStatus');
+            
+            if (!screen.orientation || !screen.orientation.lock) {
+                statusElement.textContent = 'Screen Orientation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Screen Orientation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            screen.orientation.lock('landscape').then(function() {
+                statusElement.textContent = 'Orientasi dikunci ke landscape';
+                statusElement.className = 'status status-success';
+                addLog('Orientasi layar dikunci ke landscape', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mengunci orientasi: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mengunci orientasi layar: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('unlockOrientation').addEventListener('click', function() {
+            const statusElement = document.getElementById('screenOrientationStatus');
+            
+            if (!screen.orientation || !screen.orientation.unlock) {
+                statusElement.textContent = 'Screen Orientation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Screen Orientation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            screen.orientation.unlock();
+            statusElement.textContent = 'Orientasi dibuka kuncinya';
+            statusElement.className = 'status status-success';
+            addLog('Orientasi layar dibuka kuncinya', 'success');
+        });
+        
+        // Web MIDI API
+        document.getElementById('requestMIDI').addEventListener('click', function() {
+            const statusElement = document.getElementById('midiStatus');
+            
+            if (!navigator.requestMIDIAccess) {
+                statusElement.textContent = 'Web MIDI API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web MIDI API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mengakses MIDI...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.requestMIDIAccess().then(function(midiAccess) {
+                const inputs = midiAccess.inputs;
+                const outputs = midiAccess.outputs;
+                
+                statusElement.textContent = `MIDI diakses: ${inputs.size} input, ${outputs.size} output`;
+                statusElement.className = 'status status-success';
+                addLog(`MIDI diakses: ${inputs.size} input, ${outputs.size} output`, 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mengakses MIDI: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mengakses MIDI: ${err}`, 'error');
+            });
+        });
+        
+        // WebUSB API
+        document.getElementById('requestUSB').addEventListener('click', function() {
+            const statusElement = document.getElementById('usbStatus');
+            
+            if (!navigator.usb) {
+                statusElement.textContent = 'WebUSB API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('WebUSB API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Meminta akses USB...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.usb.requestDevice({ filters: [] }).then(function(device) {
+                statusElement.textContent = `Perangkat USB dipilih: ${device.productName || 'Tanpa nama'}`;
+                statusElement.className = 'status status-success';
+                addLog(`Perangkat USB dipilih: ${device.productName || 'Tanpa nama'}`, 'success');
+            }).catch(function(err) {
+                if (err.name !== 'NotFoundError') {
+                    statusElement.textContent = 'Gagal memilih perangkat USB: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memilih perangkat USB: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Tidak ada perangkat USB dipilih';
+                    statusElement.className = 'status status-warning';
+                    addLog('Tidak ada perangkat USB dipilih', 'warning');
+                }
+            });
+        });
+        
+        // Web NFC API
+        let nfcReader = null;
+        const startNFCBtn = document.getElementById('startNFC');
+        const stopNFCBtn = document.getElementById('stopNFC');
+        
+        document.getElementById('startNFC').addEventListener('click', function() {
+            const statusElement = document.getElementById('nfcStatus');
+            
+            if (!('NDEFReader' in window)) {
+                statusElement.textContent = 'Web NFC API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web NFC API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Membaca tag NFC...';
+            statusElement.className = 'status status-warning';
+            
+            startNFCBtn.disabled = true;
+            stopNFCBtn.disabled = false;
+            
+            nfcReader = new NDEFReader();
+            
+            nfcReader.scan().then(function() {
+                statusElement.textContent = 'Membaca tag NFC... (tempelkan tag)';
+                statusElement.className = 'status status-info';
+                addLog('Membaca tag NFC...', 'info');
+                
+                nfcReader.onreading = function(event) {
+                    statusElement.textContent = 'Tag NFC berhasil dibaca';
+                    statusElement.className = 'status status-success';
+                    addLog('Tag NFC berhasil dibaca', 'success');
+                };
+                
+                nfcReader.onreadingerror = function() {
+                    statusElement.textContent = 'Gagal membaca tag NFC';
+                    statusElement.className = 'status status-error';
+                    addLog('Gagal membaca tag NFC', 'error');
+                };
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal memulai pembacaan NFC: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal memulai pembacaan NFC: ${err}`, 'error');
+                
+                startNFCBtn.disabled = false;
+                stopNFCBtn.disabled = true;
+            });
+        });
+        
+        document.getElementById('stopNFC').addEventListener('click', function() {
+            if (nfcReader) {
+                // There's no explicit stop method in the API, but we can remove event listeners
+                nfcReader.onreading = null;
+                nfcReader.onreadingerror = null;
+                nfcReader = null;
+                
+                document.getElementById('nfcStatus').textContent = 'Pembacaan NFC dihentikan';
+                document.getElementById('nfcStatus').className = 'status status-success';
+                
+                startNFCBtn.disabled = false;
+                stopNFCBtn.disabled = true;
+                
+                addLog('Pembacaan NFC dihentikan', 'success');
+            }
+        });
+        
+        // WebXR API
+        document.getElementById('requestXR').addEventListener('click', function() {
+            const statusElement = document.getElementById('xrStatus');
+            
+            if (!navigator.xr) {
+                statusElement.textContent = 'WebXR API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('WebXR API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Memeriksa dukungan VR/AR...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.xr.isSessionSupported('immersive-vr').then(function(supported) {
+                if (supported) {
+                    statusElement.textContent = 'VR didukung';
+                    statusElement.className = 'status status-success';
+                    addLog('VR didukung', 'success');
+                } else {
+                    statusElement.textContent = 'VR tidak didukung';
+                    statusElement.className = 'status status-warning';
+                    addLog('VR tidak didukung', 'warning');
+                }
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal memeriksa dukungan XR: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal memeriksa dukungan XR: ${err}`, 'error');
+            });
+        });
+        
+        // File System Access API
+        document.getElementById('openFile').addEventListener('click', function() {
+            const statusElement = document.getElementById('fileSystemStatus');
+            
+            if (!window.showOpenFilePicker) {
+                statusElement.textContent = 'File System Access API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('File System Access API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Membuka file...';
+            statusElement.className = 'status status-warning';
+            
+            showOpenFilePicker().then(function(fileHandles) {
+                statusElement.textContent = 'File berhasil dibuka';
+                statusElement.className = 'status status-success';
+                addLog('File berhasil dibuka', 'success');
+            }).catch(function(err) {
+                if (err.name !== 'AbortError') {
+                    statusElement.textContent = 'Gagal membuka file: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal membuka file: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Pemilihan file dibatalkan';
+                    statusElement.className = 'status status-warning';
+                    addLog('Pemilihan file dibatalkan', 'warning');
+                }
+            });
+        });
+        
+        document.getElementById('saveFile').addEventListener('click', function() {
+            const statusElement = document.getElementById('fileSystemStatus');
+            
+            if (!window.showSaveFilePicker) {
+                statusElement.textContent = 'File System Access API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('File System Access API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Menyimpan file...';
+            statusElement.className = 'status status-warning';
+            
+            showSaveFilePicker().then(function(fileHandle) {
+                statusElement.textContent = 'File berhasil disimpan';
+                statusElement.className = 'status status-success';
+                addLog('File berhasil disimpan', 'success');
+            }).catch(function(err) {
+                if (err.name !== 'AbortError') {
+                    statusElement.textContent = 'Gagal menyimpan file: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal menyimpan file: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Penyimpanan file dibatalkan';
+                    statusElement.className = 'status status-warning';
+                    addLog('Penyimpanan file dibatalkan', 'warning');
+                }
+            });
+        });
+        
+        // Contact Picker API
+        document.getElementById('pickContacts').addEventListener('click', function() {
+            const statusElement = document.getElementById('contactStatus');
+            
+            if (!navigator.contacts) {
+                statusElement.textContent = 'Contact Picker API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Contact Picker API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Memilih kontak...';
+            statusElement.className = 'status status-warning';
+            
+            const props = ['name', 'email', 'tel'];
+            const opts = { multiple: true };
+            
+            navigator.contacts.select(props, opts).then(function(contacts) {
+                statusElement.textContent = `${contacts.length} kontak dipilih`;
+                statusElement.className = 'status status-success';
+                addLog(`${contacts.length} kontak dipilih`, 'success');
+            }).catch(function(err) {
+                if (err.name !== 'AbortError') {
+                    statusElement.textContent = 'Gagal memilih kontak: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memilih kontak: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Pemilihan kontak dibatalkan';
+                    statusElement.className = 'status status-warning';
+                    addLog('Pemilihan kontak dibatalkan', 'warning');
+                }
+            });
+        });
+        
+        // Badging API
+        document.getElementById('setBadge').addEventListener('click', function() {
+            const statusElement = document.getElementById('badgeStatus');
+            
+            if (!navigator.setAppBadge) {
+                statusElement.textContent = 'Badging API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Badging API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.setAppBadge(1).then(function() {
+                statusElement.textContent = 'Badge disetel ke 1';
+                statusElement.className = 'status status-success';
+                addLog('Badge disetel ke 1', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menyetel badge: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyetel badge: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('clearBadge').addEventListener('click', function() {
+            const statusElement = document.getElementById('badgeStatus');
+            
+            if (!navigator.clearAppBadge) {
+                statusElement.textContent = 'Badging API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Badging API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.clearAppBadge().then(function() {
+                statusElement.textContent = 'Badge dihapus';
+                statusElement.className = 'status status-success';
+                addLog('Badge dihapus', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menghapus badge: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menghapus badge: ${err}`, 'error');
+            });
+        });
+        
+        // Idle Detection API
+        let idleDetector = null;
+        const startIdleBtn = document.getElementById('startIdleDetection');
+        const stopIdleBtn = document.getElementById('stopIdleDetection');
+        
+        document.getElementById('startIdleDetection').addEventListener('click', function() {
+            const statusElement = document.getElementById('idleStatus');
+            
+            if (!window.IdleDetector) {
+                statusElement.textContent = 'Idle Detection API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Idle Detection API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Memulai deteksi idle...';
+            statusElement.className = 'status status-warning';
+            
+            startIdleBtn.disabled = true;
+            stopIdleBtn.disabled = false;
+            
+            IdleDetector.requestPermission().then(function() {
+                idleDetector = new IdleDetector();
+                idleDetector.start({
+                    threshold: 60000 // 1 minute
+                }).then(function() {
+                    statusElement.textContent = 'Deteksi idle dimulai';
+                    statusElement.className = 'status status-success';
+                    addLog('Deteksi idle dimulai', 'success');
+                    
+                    idleDetector.addEventListener('change', function() {
+                        const userState = idleDetector.userState;
+                        const screenState = idleDetector.screenState;
+                        
+                        statusElement.textContent = `Status: Pengguna ${userState}, Layar ${screenState}`;
+                        statusElement.className = 'status status-info';
+                        addLog(`Status idle: Pengguna ${userState}, Layar ${screenState}`, 'info');
+                    });
+                }).catch(function(err) {
+                    statusElement.textContent = 'Gagal memulai deteksi idle: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memulai deteksi idle: ${err}`, 'error');
+                    
+                    startIdleBtn.disabled = false;
+                    stopIdleBtn.disabled = true;
+                });
+            }).catch(function(err) {
+                statusElement.textContent = 'Izin deteksi idle ditolak: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Izin deteksi idle ditolak: ${err}`, 'error');
+                
+                startIdleBtn.disabled = false;
+                stopIdleBtn.disabled = true;
+            });
+        });
+        
+        document.getElementById('stopIdleDetection').addEventListener('click', function() {
+            if (idleDetector) {
+                idleDetector.stop();
+                idleDetector = null;
+                
+                document.getElementById('idleStatus').textContent = 'Deteksi idle dihentikan';
+                document.getElementById('idleStatus').className = 'status status-success';
+                
+                startIdleBtn.disabled = false;
+                stopIdleBtn.disabled = true;
+                
+                addLog('Deteksi idle dihentikan', 'success');
+            }
+        });
+        
+        // Presentation API
+        document.getElementById('startPresentation').addEventListener('click', function() {
+            const statusElement = document.getElementById('presentationStatus');
+            
+            if (!navigator.presentation) {
+                statusElement.textContent = 'Presentation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Presentation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Memulai presentasi...';
+            statusElement.className = 'status status-warning';
+            
+            const presentationRequest = new PresentationRequest(['https://example.com']);
+            
+            presentationRequest.start().then(function(connection) {
+                statusElement.textContent = 'Presentasi dimulai';
+                statusElement.className = 'status status-success';
+                addLog('Presentasi dimulai', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal memulai presentasi: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal memulai presentasi: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('reconnectPresentation').addEventListener('click', function() {
+            const statusElement = document.getElementById('presentationStatus');
+            
+            if (!navigator.presentation) {
+                statusElement.textContent = 'Presentation API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Presentation API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Menyambung kembali presentasi...';
+            statusElement.className = 'status status-warning';
+            
+            const presentationRequest = new PresentationRequest(['https://example.com']);
+            
+            presentationRequest.reconnect('session-id').then(function(connection) {
+                statusElement.textContent = 'Presentasi tersambung kembali';
+                statusElement.className = 'status status-success';
+                addLog('Presentasi tersambung kembali', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menyambung kembali presentasi: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyambung kembali presentasi: ${err}`, 'error');
+            });
+        });
+        
+        // Web Authentication API
+        document.getElementById('createCredential').addEventListener('click', function() {
+            const statusElement = document.getElementById('webauthnStatus');
+            
+            if (!navigator.credentials || !navigator.credentials.create) {
+                statusElement.textContent = 'Web Authentication API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web Authentication API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Membuat kredensial...';
+            statusElement.className = 'status status-warning';
+            
+            // This is a simplified example - in a real app, you'd get these from your server
+            const publicKey = {
+                challenge: new Uint8Array(32),
+                rp: {
+                    name: "Contoh Situs",
+                    id: "localhost"
+                },
+                user: {
+                    id: new Uint8Array(16),
+                    name: "user@example.com",
+                    displayName: "Pengguna Contoh"
+                },
+                pubKeyCredParams: [{alg: -7, type: "public-key"}],
+                timeout: 60000,
+                attestation: "direct"
+            };
+            
+            navigator.credentials.create({ publicKey })
+                .then(function(newCredential) {
+                    statusElement.textContent = 'Kredensial berhasil dibuat';
+                    statusElement.className = 'status status-success';
+                    addLog('Kredensial WebAuthn berhasil dibuat', 'success');
+                })
+                .catch(function(err) {
+                    statusElement.textContent = 'Gagal membuat kredensial: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal membuat kredensial WebAuthn: ${err}`, 'error');
+                });
+        });
+        
+        document.getElementById('getAssertion').addEventListener('click', function() {
+            const statusElement = document.getElementById('webauthnStatus');
+            
+            if (!navigator.credentials || !navigator.credentials.get) {
+                statusElement.textContent = 'Web Authentication API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web Authentication API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendapatkan assertion...';
+            statusElement.className = 'status status-warning';
+            
+            // This is a simplified example - in a real app, you'd get these from your server
+            const publicKey = {
+                challenge: new Uint8Array(32),
+                timeout: 60000,
+                rpId: "localhost",
+                allowCredentials: []
+            };
+            
+            navigator.credentials.get({ publicKey })
+                .then(function(assertion) {
+                    statusElement.textContent = 'Assertion berhasil didapatkan';
+                    statusElement.className = 'status status-success';
+                    addLog('Assertion WebAuthn berhasil didapatkan', 'success');
+                })
+                .catch(function(err) {
+                    statusElement.textContent = 'Gagal mendapatkan assertion: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal mendapatkan assertion WebAuthn: ${err}`, 'error');
+                });
+        });
+        
+        // Web Serial API
+        document.getElementById('requestSerial').addEventListener('click', function() {
+            const statusElement = document.getElementById('serialStatus');
+            
+            if (!navigator.serial) {
+                statusElement.textContent = 'Web Serial API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web Serial API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Meminta akses port serial...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.serial.requestPort().then(function(port) {
+                statusElement.textContent = 'Port serial dipilih';
+                statusElement.className = 'status status-success';
+                addLog('Port serial dipilih', 'success');
+            }).catch(function(err) {
+                if (err.name !== 'NotFoundError') {
+                    statusElement.textContent = 'Gagal memilih port serial: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memilih port serial: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Tidak ada port serial dipilih';
+                    statusElement.className = 'status status-warning';
+                    addLog('Tidak ada port serial dipilih', 'warning');
+                }
+            });
+        });
+        
+        // WebHID API
+        document.getElementById('requestHID').addEventListener('click', function() {
+            const statusElement = document.getElementById('hidStatus');
+            
+            if (!navigator.hid) {
+                statusElement.textContent = 'WebHID API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('WebHID API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Meminta akses perangkat HID...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.hid.requestDevice({ filters: [] }).then(function(devices) {
+                statusElement.textContent = `${devices.length} perangkat HID dipilih`;
+                statusElement.className = 'status status-success';
+                addLog(`${devices.length} perangkat HID dipilih`, 'success');
+            }).catch(function(err) {
+                if (err.name !== 'NotFoundError') {
+                    statusElement.textContent = 'Gagal memilih perangkat HID: ' + err;
+                    statusElement.className = 'status status-error';
+                    addLog(`Gagal memilih perangkat HID: ${err}`, 'error');
+                } else {
+                    statusElement.textContent = 'Tidak ada perangkat HID dipilih';
+                    statusElement.className = 'status status-warning';
+                    addLog('Tidak ada perangkat HID dipilih', 'warning');
+                }
+            });
+        });
+        
+        // Web Locks API
+        document.getElementById('acquireLock').addEventListener('click', function() {
+            const statusElement = document.getElementById('lockStatus');
+            
+            if (!navigator.locks) {
+                statusElement.textContent = 'Web Locks API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web Locks API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendapatkan kunci...';
+            statusElement.className = 'status status-warning';
+            
+            navigator.locks.request('contoh-kunci', function(lock) {
+                statusElement.textContent = 'Kunci didapatkan';
+                statusElement.className = 'status status-success';
+                addLog('Kunci didapatkan', 'success');
+                
+                // Kunci akan dilepaskan ketika fungsi ini selesai
+                return new Promise(function(resolve) {
+                    setTimeout(resolve, 5000); // Tahan kunci selama 5 detik
+                });
+            }).then(function() {
+                statusElement.textContent = 'Kunci dilepaskan';
+                statusElement.className = 'status status-info';
+                addLog('Kunci dilepaskan', 'info');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal mendapatkan kunci: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal mendapatkan kunci: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('releaseLock').addEventListener('click', function() {
+            const statusElement = document.getElementById('lockStatus');
+            
+            if (!navigator.locks) {
+                statusElement.textContent = 'Web Locks API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Web Locks API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            // Tidak ada cara langsung untuk melepaskan kunci dari luar
+            // Kunci dilepaskan secara otomatis ketika callback selesai
+            statusElement.textContent = 'Kunci akan dilepaskan secara otomatis';
+            statusElement.className = 'status status-info';
+            addLog('Kunci akan dilepaskan secara otomatis', 'info');
+        });
+        
+        // Web Share Target API
+        document.getElementById('checkShareTarget').addEventListener('click', function() {
+            const statusElement = document.getElementById('shareTargetStatus');
+            
+            // Web Share Target API adalah manifest-based, tidak ada JavaScript API langsung
+            // Kita hanya bisa memeriksa apakah halaman saat ini dimuat sebagai share target
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedTitle = urlParams.get('title');
+            const sharedText = urlParams.get('text');
+            const sharedUrl = urlParams.get('url');
+            
+            if (sharedTitle || sharedText || sharedUrl) {
+                statusElement.textContent = 'Halaman ini dimuat sebagai share target';
+                statusElement.className = 'status status-success';
+                addLog('Halaman ini dimuat sebagai share target', 'success');
+            } else {
+                statusElement.textContent = 'Halaman ini tidak dimuat sebagai share target';
+                statusElement.className = 'status status-info';
+                addLog('Halaman ini tidak dimuat sebagai share target', 'info');
+            }
+        });
+        
+        // Periodic Background Sync API
+        document.getElementById('registerPeriodicSync').addEventListener('click', function() {
+            const statusElement = document.getElementById('periodicSyncStatus');
+            
+            if (!('periodicSync' in registration)) {
+                statusElement.textContent = 'Periodic Background Sync API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Periodic Background Sync API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendaftarkan sync periodik...';
+            statusElement.className = 'status status-warning';
+            
+            // Catatan: Ini hanya bekerja dalam konteks Service Worker
+            if ('serviceWorker' in navigator && 'PeriodicSyncManager' in window) {
+                navigator.serviceWorker.ready.then(function(registration) {
+                    registration.periodicSync.register('contoh-sync', {
+                        minInterval: 24 * 60 * 60 * 1000 // 1 hari
+                    }).then(function() {
+                        statusElement.textContent = 'Sync periodik terdaftar';
+                        statusElement.className = 'status status-success';
+                        addLog('Sync periodik terdaftar', 'success');
+                    }).catch(function(err) {
+                        statusElement.textContent = 'Gagal mendaftarkan sync periodik: ' + err;
+                        statusElement.className = 'status status-error';
+                        addLog(`Gagal mendaftarkan sync periodik: ${err}`, 'error');
+                    });
+                });
+            } else {
+                statusElement.textContent = 'Service Worker tidak tersedia';
+                statusElement.className = 'status status-error';
+                addLog('Service Worker tidak tersedia untuk Periodic Background Sync', 'error');
+            }
+        });
+        
+        // Content Index API
+        document.getElementById('addToContentIndex').addEventListener('click', function() {
+            const statusElement = document.getElementById('contentIndexStatus');
+            
+            if (!('index' in registration)) {
+                statusElement.textContent = 'Content Index API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Content Index API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Menambahkan konten ke indeks...';
+            statusElement.className = 'status status-warning';
+            
+            // Catatan: Ini hanya bekerja dalam konteks Service Worker
+            if ('serviceWorker' in navigator && 'ContentIndex' in window) {
+                navigator.serviceWorker.ready.then(function(registration) {
+                    registration.index.add({
+                        id: 'contoh-konten',
+                        title: 'Contoh Konten',
+                        description: 'Ini adalah contoh konten untuk diindeks',
+                        url: '/contoh-konten',
+                        category: 'article',
+                        icons: [{
+                            src: '/icon.png',
+                            sizes: '192x192',
+                            type: 'image/png'
+                        }]
+                    }).then(function() {
+                        statusElement.textContent = 'Konten berhasil ditambahkan ke indeks';
+                        statusElement.className = 'status status-success';
+                        addLog('Konten berhasil ditambahkan ke indeks', 'success');
+                    }).catch(function(err) {
+                        statusElement.textContent = 'Gagal menambahkan konten ke indeks: ' + err;
+                        statusElement.className = 'status status-error';
+                        addLog(`Gagal menambahkan konten ke indeks: ${err}`, 'error');
+                    });
+                });
+            } else {
+                statusElement.textContent = 'Service Worker tidak tersedia';
+                statusElement.className = 'status status-error';
+                addLog('Service Worker tidak tersedia untuk Content Index API', 'error');
+            }
+        });
+        
+        document.getElementById('getContentIndex').addEventListener('click', function() {
+            const statusElement = document.getElementById('contentIndexStatus');
+            
+            if (!('index' in registration)) {
+                statusElement.textContent = 'Content Index API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('Content Index API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            statusElement.textContent = 'Mendapatkan daftar konten terindeks...';
+            statusElement.className = 'status status-warning';
+            
+            // Catatan: Ini hanya bekerja dalam konteks Service Worker
+            if ('serviceWorker' in navigator && 'ContentIndex' in window) {
+                navigator.serviceWorker.ready.then(function(registration) {
+                    registration.index.getAll().then(function(contents) {
+                        statusElement.textContent = `${contents.length} konten terindeks`;
+                        statusElement.className = 'status status-success';
+                        addLog(`${contents.length} konten terindeks`, 'success');
+                    }).catch(function(err) {
+                        statusElement.textContent = 'Gagal mendapatkan daftar konten: ' + err;
+                        statusElement.className = 'status status-error';
+                        addLog(`Gagal mendapatkan daftar konten: ${err}`, 'error');
+                    });
+                });
+            } else {
+                statusElement.textContent = 'Service Worker tidak tersedia';
+                statusElement.className = 'status status-error';
+                addLog('Service Worker tidak tersedia untuk Content Index API', 'error');
+            }
+        });
+        
+        // App Badging API
+        document.getElementById('setAppBadge').addEventListener('click', function() {
+            const statusElement = document.getElementById('appBadgeStatus');
+            
+            if (!navigator.setAppBadge) {
+                statusElement.textContent = 'App Badging API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('App Badging API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.setAppBadge(5).then(function() {
+                statusElement.textContent = 'App badge disetel ke 5';
+                statusElement.className = 'status status-success';
+                addLog('App badge disetel ke 5', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menyetel app badge: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menyetel app badge: ${err}`, 'error');
+            });
+        });
+        
+        document.getElementById('clearAppBadge').addEventListener('click', function() {
+            const statusElement = document.getElementById('appBadgeStatus');
+            
+            if (!navigator.clearAppBadge) {
+                statusElement.textContent = 'App Badging API tidak didukung browser ini';
+                statusElement.className = 'status status-error';
+                addLog('App Badging API tidak didukung browser ini', 'error');
+                return;
+            }
+            
+            navigator.clearAppBadge().then(function() {
+                statusElement.textContent = 'App badge dihapus';
+                statusElement.className = 'status status-success';
+                addLog('App badge dihapus', 'success');
+            }).catch(function(err) {
+                statusElement.textContent = 'Gagal menghapus app badge: ' + err;
+                statusElement.className = 'status status-error';
+                addLog(`Gagal menghapus app badge: ${err}`, 'error');
+            });
+        });
+        
+        // Initial log entry
+        addLog('Dashboard API Browser dimuat. Pilih salah satu fitur untuk mencoba.', 'info');
+    </script>
+</body>
+</html>
