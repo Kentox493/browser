@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation API Example</title>
+</head>
+<body>
+    <h1>Demo Presentation API</h1>
+    <p>Halaman ini mendemonstrasikan penggunaan Presentation API untuk menampilkan konten di layar kedua.</p>
+    
+    <button id="startBtn">Mulai Presentasi</button>
+    <button id="stopBtn" disabled>Hentikan Presentasi</button>
+    
+    <div id="status">Status: Presentasi belum dimulai</div>
+    
+    <script>
+        let presentationRequest;
+        let presentationConnection;
+
+        // Cek apakah browser mendukung Presentation API
+        if (navigator.presentation) {
+            presentationRequest = new PresentationRequest(['presentation.html']);
+        } else {
+            document.getElementById('status').textContent = 'Status: Browser tidak mendukung Presentation API';
+            document.getElementById('startBtn').disabled = true;
+        }
+
+        // Tombol mulai presentasi
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            try {
+                presentationConnection = await presentationRequest.start();
+                
+                document.getElementById('status').textContent = 'Status: Presentasi aktif';
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                
+                // Event listener untuk ketika koneksi tertutup
+                presentationConnection.addEventListener('close', () => {
+                    document.getElementById('status').textContent = 'Status: Presentasi dihentikan';
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('stopBtn').disabled = true;
+                });
+                
+                // Event listener untuk error
+                presentationConnection.addEventListener('terminate', () => {
+                    document.getElementById('status').textContent = 'Status: Presentasi terminated';
+                    document.getElementById('startBtn').disabled = false;
+                    document.getElementById('stopBtn').disabled = true;
+                });
+                
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+            }
+        });
+
+        // Tombol hentikan presentasi
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            if (presentationConnection) {
+                presentationConnection.terminate();
+            }
+        });
+    </script>
+</body>
+</html>
