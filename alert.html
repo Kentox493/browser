@@ -1,7 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Login Demo</title>
+</head>
+<body>
+
+<button onclick="login()">Login</button>
+
 <script>
-	function save(pass){
-		alert("Password is " + pass);
-		myWindow.close();
-		window.close();
-	}
+function login() {
+  const identity = prompt("Masukkan identitas (username / email):");
+  if (identity === null) return;
+
+  const password = prompt("Masukkan password:");
+  if (password === null) return;
+
+  console.log("Identitas:", identity);
+  console.log("Password:", password);
+
+  alert("Data diterima (cek console)");
+}
 </script>
+
+</body>
+</html>
