@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Share Website</title>
+</head>
+<body>
+
+<button onclick="shareSite()">Share Website</button>
+
+<script>
+function shareSite() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Judul Website',
