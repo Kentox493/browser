@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picture in Picture Demo</title>
+</head>
+<body>
+
+<video id="video" width="400" controls>
+  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+  Browser kamu tidak mendukung video.
+</video>
+
+<br><br>
+
+<button onclick="enablePiP()">Aktifkan PiP</button>
+
+<script>
+async function enablePiP() {
+  const video = document.getElementById('video');
+
+  try {
+    if (document.pictureInPictureElement) {
+      await document.exitPictureInPicture();
+    } else {
+      await video.requestPictureInPicture();
+    }
+  } catch (err) {
+    console.error("PiP gagal:", err);
+  }
+}
+</script>
+
+</body>
+</html>
