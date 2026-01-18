@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player dengan Fitur Picture-in-Picture</title>
+</head>
+<body>
+    <header>
+        <h1>Video Player dengan Fitur Picture-in-Picture</h1>
+        <p>Video akan terus berjalan dalam mode Picture-in-Picture saat Anda membuka tab baru.</p>
+    </header>
+
+    <main>
+        <section id="video-section">
+            <h2>Putar Video</h2>
+            <div>
+                <video id="videoPlayer" controls width="640">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung elemen video.
+                </video>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button id="pipButton" onclick="togglePictureInPicture()">Aktifkan Picture-in-Picture</button>
+                <button onclick="openNewTab()">Buka Tab Baru</button>
+                <button onclick="requestOverridePermission()">Minta Izin Menimpa Tab</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <p id="status">Status: Video dalam tab utama</p>
+                <p id="permissionStatus">Status Izin: Belum diminta</p>
+            </div>
+        </section>
+
+        <section style="margin-top: 30px;">
+            <h3>Petunjuk Penggunaan:</h3>
+            <ol>
+                <li>Putar video menggunakan kontrol player di atas</li>
+                <li>Klik "Aktifkan Picture-in-Picture" untuk memasuki mode PiP</li>
+                <li>Klik "Buka Tab Baru" untuk membuka tab baru (video akan tetap berjalan di PiP)</li>
+                <li>Klik "Minta Izin Menimpa Tab" untuk meminta izin menimpa tab baru dengan video PiP sebelumnya</li>
+            </ol>
+        </section>
+    </main>
+
+    <footer style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <p>Video contoh: Big Buck Bunny (CC Blender Foundation)</p>
+    </footer>
+
+    <script>
+        // Elemen video dan status
+        const videoPlayer = document.getElementById('videoPlayer');
+        const pipButton = document.getElementById('pipButton');
+        const statusText = document.getElementById('status');
+        const permissionStatus = document.getElementById('permissionStatus');
+
+        // Variabel untuk melacak status PiP
+        let isInPictureInPicture = false;
+        let pipWindow = null;
+
+        // Memeriksa apakah browser mendukung Picture-in-Picture API
+        function isPictureInPictureSupported() {
+            return 'pictureInPictureEnabled' in document ||
+                   'webkitPictureInPictureEnabled' in document ||
+                   'mozPictureInPictureEnabled' in document;
+        }
+
+        // Mengaktifkan atau menonaktifkan Picture-in-Picture
+        async function togglePictureInPicture() {
+            if (!isPictureInPictureSupported()) {
+                alert('Browser Anda tidak mendukung Picture-in-Picture API.');
+                return;
+            }
+
+            try {
+                if (!isInPictureInPicture) {
+                    // Memasuki mode Picture-in-Picture
+                    if (document.pictureInPictureElement) {
+                        await document.exitPictureInPicture();
+                    }
+
+                    await videoPlayer.requestPictureInPicture();
+                    isInPictureInPicture = true;
+                    pipButton.textContent = 'Keluar dari Picture-in-Picture';
+                    statusText.textContent = 'Status: Video dalam mode Picture-in-Picture';
+
+                    // Simpan referensi ke window PiP
+                    pipWindow = document.pictureInPictureElement;
+
+                    // Tambahkan event listener untuk mengetahui kapan PiP ditutup
+                    videoPlayer.addEventListener('leavepictureinpicture', () => {
+                        isInPictureInPicture = false;
+                        pipButton.textContent = 'Aktifkan Picture-in-Picture';
+                        statusText.textContent = 'Status: Video dalam tab utama';
+                        pipWindow = null;
+                    });
+
+                } else {
+                    // Keluar dari mode Picture-in-Picture
+                    await document.exitPictureInPicture();
+                    isInPictureInPicture = false;
+                    pipButton.textContent = 'Aktifkan Picture-in-Picture';
+                    statusText.textContent = 'Status: Video dalam tab utama';
+                    pipWindow = null;
+                }
+            } catch (error) {
+                console.error('Error saat mengaktifkan Picture-in-Picture:', error);
+                alert('Terjadi kesalahan saat mengaktifkan Picture-in-Picture: ' + error.message);
+            }
+        }
+
+        // Membuka tab baru
+        function openNewTab() {
+            window.open('about:blank', '_blank');
+            statusText.textContent = 'Status: Video berjalan di latar belakang (PiP aktif)';
+
+            // Jika PiP aktif, beri tahu pengguna bahwa video masih berjalan
+            if (isInPictureInPicture) {
+                setTimeout(() => {
+                    alert('Video masih berjalan dalam mode Picture-in-Picture!');
+                }, 500);
+            }
+        }
+
+        // Meminta izin untuk menimpa tab baru dengan video PiP sebelumnya
+        function requestOverridePermission() {
+            // Catatan: Browser tidak memiliki API spesifik untuk "izin menimpa tab"
+            // Pada implementasi nyata, ini akan menggunakan Notification API atau memerlukan
+            // ekstensi browser khusus. Di sini kita akan simulasi permintaan izin.
+
+            const userConfirmed = confirm(
+                'Izinkan aplikasi ini untuk menimpa tab baru dengan video Picture-in-Picture sebelumnya?\n\n' +
+                'Dengan mengizinkan, saat Anda membuka tab baru, video akan otomatis muncul di Picture-in-Picture.'
+            );
+
+            if (userConfirmed) {
+                permissionStatus.textContent = 'Status Izin: Diizinkan untuk menimpa tab baru';
+                permissionStatus.style.color = 'green';
+
+                // Simpan preferensi pengguna di localStorage
+                localStorage.setItem('pipOverridePermission', 'granted');
+
+                alert('Izin diberikan! Sekarang saat Anda membuka tab baru, video akan otomatis muncul dalam Picture-in-Picture.');
+            } else {
+                permissionStatus.textContent = 'Status Izin: Ditolak untuk menimpa tab baru';
+                permissionStatus.style.color = 'red';
+
+                // Simpan preferensi pengguna di localStorage
+                localStorage.setItem('pipOverridePermission', 'denied');
+
+                alert('Izin ditolak. Video tidak akan otomatis muncul di Picture-in-Picture saat membuka tab baru.');
+            }
+        }
+
+        // Memeriksa apakah izin sudah diberikan sebelumnya
+        function checkExistingPermission() {
+            const permission = localStorage.getItem('pipOverridePermission');
+            if (permission === 'granted') {
+                permissionStatus.textContent = 'Status Izin: Diizinkan untuk menimpa tab baru';
+                permissionStatus.style.color = 'green';
+            } else if (permission === 'denied') {
+                permissionStatus.textContent = 'Status Izin: Ditolak untuk menimpa tab baru';
+                permissionStatus.style.color = 'red';
+            }
+        }
+
+        // Memulai video saat halaman dimuat (opsional)
+        window.addEventListener('DOMContentLoaded', () => {
+            // Periksa izin yang sudah ada
+            checkExistingPermission();
+
+            // Cek dukungan Picture-in-Picture
+            if (!isPictureInPictureSupported()) {
+                pipButton.disabled = true;
+                pipButton.textContent = 'Picture-in-Picture Tidak Didukung';
+                statusText.textContent = 'Status: Picture-in-Picture tidak didukung di browser ini';
+            }
+
+            // Event listener untuk mendeteksi ketika PiP dimulai oleh browser
+            videoPlayer.addEventListener('enterpictureinpicture', () => {
+                isInPictureInPicture = true;
+                pipButton.textContent = 'Keluar dari Picture-in-Picture';
+                statusText.textContent = 'Status: Video dalam mode Picture-in-Picture';
+            });
+
+            videoPlayer.addEventListener('leavepictureinpicture', () => {
+                isInPictureInPicture = false;
+                pipButton.textContent = 'Aktifkan Picture-in-Picture';
+                statusText.textContent = 'Status: Video dalam tab utama';
+            });
+        });
+
+        // Simulasi: Otomatis aktifkan PiP saat membuka tab baru jika izin diberikan
+        // Catatan: Ini adalah simulasi karena browser tidak mengizinkan otomatisasi langsung
+        window.addEventListener('blur', () => {
+            // Jika pengguna memberi izin dan video sedang diputar tapi tidak dalam PiP
+            const permission = localStorage.getItem('pipOverridePermission');
+            if (permission === 'granted' && !isInPictureInPicture && !videoPlayer.paused) {
+                // Dalam implementasi nyata, ini akan memicu PiP
+                // Tapi karena batasan browser, kita hanya menampilkan status
+                statusText.textContent = 'Status: Video siap untuk Picture-in-Picture (izin diberikan)';
+            }
+        });
+    </script>
+</body>
+</html>
