@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fullscreen + Calendar via Link</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    background: #111;
+    color: white;
+    font-family: Arial;
+    cursor: default;
+  }
+
+  #container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* sembunyikan input */
+  #g {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+
+<body>
+<div id="container">
+  <input type="datetime-local" id="g">
+</div>
+
+<script>
+function openCalendar() {
+  let input = document.getElementById("g");
+
+  input.focus();
+
+  if (input.showPicker) {
+    input.showPicker();
+  }
+}
+
+// MOUSE DOWN - trigger saat klik di mana aja di halaman
+let triggered = false;
+document.getElementById("container").addEventListener("mousedown", function(e) {
+  if (triggered) return;
+  triggered = true;
+
+  // FULLSCREEN
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  }
+
+  setTimeout(() => {
+    openCalendar();
+  }, 200);
+});
+</script>
+
+</body>
+</html>
